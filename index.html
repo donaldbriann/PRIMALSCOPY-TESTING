@@ -933,6 +933,125 @@
     100% { opacity: 0; transform: scale(0.5); }
   }
 
+  /* SNEAK PEEK GALLERY — stacked cards */
+  #gallery {
+    background: var(--black);
+  }
+
+  .stack-wrap {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 3rem;
+  }
+
+  .card-stack {
+    position: relative;
+    width: min(340px, 82vw);
+    height: 440px;
+  }
+
+  .stack-card {
+    position: absolute;
+    inset: 0;
+    overflow: hidden;
+    border: 1px solid var(--border);
+    background: var(--surface2);
+    cursor: pointer;
+    box-shadow: 0 14px 34px rgba(0,0,0,0.55);
+    transition: transform 0.5s cubic-bezier(.22,.8,.25,1), box-shadow 0.4s ease, filter 0.4s ease;
+  }
+
+  .stack-card.no-transition { transition: none !important; }
+
+  .stack-img {
+    position: absolute;
+    inset: 0;
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+    display: block;
+    filter: grayscale(30%) brightness(0.68);
+    transition: filter 0.45s ease, transform 0.6s ease;
+  }
+
+  .stack-info {
+    position: absolute;
+    inset: 0;
+    display: flex;
+    flex-direction: column;
+    justify-content: flex-end;
+    padding: 1.5rem;
+    background: linear-gradient(to top, rgba(5,4,4,0.96) 8%, rgba(5,4,4,0.25) 58%, transparent 100%);
+    opacity: 0;
+    transition: opacity 0.4s ease;
+  }
+
+  .stack-number {
+    font-family: 'Cinzel', serif;
+    font-size: 0.7rem;
+    letter-spacing: 0.15em;
+    color: var(--red-bright);
+    opacity: 0.85;
+    margin-bottom: 0.6rem;
+  }
+
+  .stack-name {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    font-weight: 700;
+    color: var(--text);
+    letter-spacing: 0.05em;
+    margin-bottom: 0.5rem;
+  }
+
+  .stack-lore {
+    font-size: 0.85rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+  }
+
+  /* Stack depth positions, applied/reordered by JS */
+  .stack-card.pos-0 { transform: translate(0,0) rotate(0deg) scale(1); z-index: 4; pointer-events: auto; }
+  .stack-card.pos-1 { transform: translate(12px,12px) rotate(3deg) scale(0.96); z-index: 3; pointer-events: none; filter: brightness(0.75); }
+  .stack-card.pos-2 { transform: translate(22px,22px) rotate(-3.5deg) scale(0.92); z-index: 2; pointer-events: none; filter: brightness(0.6); }
+  .stack-card.pos-3 { transform: translate(30px,32px) rotate(5deg) scale(0.88); z-index: 1; pointer-events: none; filter: brightness(0.48); opacity: 0.9; }
+
+  .stack-card.pos-0:hover,
+  .stack-card.pos-0.touch-revealed {
+    transform: translate(0,-16px) scale(1.06);
+    box-shadow: 0 26px 55px rgba(192,17,10,0.3);
+  }
+  .stack-card.pos-0:hover .stack-img,
+  .stack-card.pos-0.touch-revealed .stack-img {
+    filter: grayscale(0%) brightness(0.88);
+    transform: scale(1.05);
+  }
+  .stack-card.pos-0:hover .stack-info,
+  .stack-card.pos-0.touch-revealed .stack-info {
+    opacity: 1;
+  }
+
+  .stack-card.exiting {
+    transform: translate(-70px,-90px) rotate(-14deg) scale(0.9) !important;
+    opacity: 0;
+  }
+
+  .stack-hint {
+    text-align: center;
+    color: var(--text-muted);
+    font-size: 0.75rem;
+    letter-spacing: 0.1em;
+    margin-top: 1.75rem;
+    opacity: 0.65;
+  }
+
+  @media (max-width: 720px) {
+    .card-stack { width: min(300px, 86vw); height: 400px; margin-top: 1rem; }
+    .stack-name { font-size: 1rem; }
+    .stack-lore { font-size: 0.8rem; }
+  }
+
 </style>
 </head>
 <body>
@@ -1023,6 +1142,95 @@
         <p>No one knows what caused the Awakening. Some believe it came from the stars. Others claim it emerged from deep beneath the earth. Many think the truth has been lost forever.</p>
         <p>Now a new era approaches. Ancient symbols are resurfacing. Forgotten relics are being discovered. Strange markings have begun appearing across the world — as if something dormant has started to awaken once again.</p>
       </div>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
+<!-- SNEAK PEEK GALLERY -->
+<section id="gallery">
+  <div class="container">
+    <div class="fade-in" style="text-align: center; margin-bottom: 1rem;">
+      <p class="section-eyebrow">Sneak peek</p>
+      <h2 class="section-title">Specimens of the Awakening</h2>
+      <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto; font-size: 0.92rem;">A handful of Primals have surfaced early. Hover to inspect. Click to reveal the next.</p>
+    </div>
+
+    <div class="stack-wrap fade-in">
+      <div class="card-stack" id="card-stack">
+        <div class="stack-card pos-0" tabindex="0" data-order="0">
+          <img src="BASE_1.jpg" alt="Naked Primal" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Naked Primal</p>
+            <p class="stack-lore">Once unchallenged, this naked Primal is eager to take it back after losing everything during the fall of his legion.</p>
+          </div>
+        </div>
+        <div class="stack-card pos-1" tabindex="0" data-order="1">
+          <img src="PF4.jpg" alt="Tiger Claus" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Tiger Claus</p>
+            <p class="stack-lore">The ruthless apex enforcer of the Primal wilds, gifts fear and loyalty across his legion.</p>
+          </div>
+        </div>
+        <div class="stack-card pos-2" tabindex="0" data-order="2">
+          <img src="SNEAKZZ.jpg" alt="Dragon Warlord" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Dragon Warlord</p>
+            <p class="stack-lore">Bound by oath to an ancient dragon, he channels its fury through every strike. When his beam ignites, even the legends retreat.</p>
+          </div>
+        </div>
+        <div class="stack-card pos-3" tabindex="0" data-order="3">
+          <img src="HM9XHC-WIAAx58R.jpg" alt="King Primal" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">King Primal</p>
+            <p class="stack-lore">Crowned in the ruins of past empires, King Primal fought for his throne, promising treasure to the loyal and total annihilation to all else.</p>
+          </div>
+        </div>
+        <div class="stack-card" tabindex="0" data-order="4">
+          <img src="Emp.jpg" alt="Primal Emperor" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Primal Emperor</p>
+            <p class="stack-lore">Donned in his legendary fur bounty, the Primal Emperor symbolizes mastery of nature, abundance, and instinctive dominance.</p>
+          </div>
+        </div>
+        <div class="stack-card" tabindex="0" data-order="5">
+          <img src="HOLY.jpg" alt="Astral Primal" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Astral Primal</p>
+            <p class="stack-lore">A star touched evolution of the unfinished lineage, forever suspended between primal instinct and transcendent knowledge.</p>
+          </div>
+        </div>
+        <div class="stack-card" tabindex="0" data-order="6">
+          <img src="IMG_7240.jpg" alt="Captain Cloud" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Captain Cloud</p>
+            <p class="stack-lore">Before the maps were drawn and the stars were named, Captain Cloud sailed the unseen currents between worlds seeking the Awakening.</p>
+          </div>
+        </div>
+        <div class="stack-card" tabindex="0" data-order="7">
+          <img src="image__4_.jpg" alt="Infernal Warlord" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Infernal Warlord</p>
+            <p class="stack-lore">Born of the old blood, the Infernal Warlord rejected the slow crawl of evolution and forged himself in primordial blaze.</p>
+          </div>
+        </div>
+        <div class="stack-card" tabindex="0" data-order="8">
+          <img src="image__2_.jpg" alt="Primal Samurai" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Primal Samurai</p>
+            <p class="stack-lore">Forged by forgotten relics and guided by the Awakening, he stands between instinct and evolution, guarding the path to what comes next.</p>
+          </div>
+        </div>
+        <div class="stack-card" tabindex="0" data-order="9">
+          <img src="image__1_.jpg" alt="Serpent Guardian" class="stack-img" />
+          <div class="stack-info">
+            <p class="stack-name">Serpent Guardian</p>
+            <p class="stack-lore">Once the sacred guardian of the primal groves, it rewrote its flesh. Now it walks the graveyard of its own kind, waiting for the final call of the Primals.</p>
+          </div>
+        </div>
+      </div>
+      <p class="stack-hint">Hover to inspect · Click to reveal the next</p>
     </div>
   </div>
 </section>
@@ -1195,6 +1403,61 @@ const observer = new IntersectionObserver((entries) => {
 })();
 
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
+
+// Sneak peek — stacked card gallery
+(function() {
+  const stack = document.getElementById('card-stack');
+  if (!stack) return;
+
+  let order = Array.from(stack.querySelectorAll('.stack-card'));
+  const isTouch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+
+  function applyPositions() {
+    order.forEach((card, i) => {
+      card.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3');
+      const depth = Math.min(i, 3);
+      card.classList.add('pos-' + depth);
+    });
+  }
+
+  function advance(topCard) {
+    topCard.classList.add('exiting');
+    setTimeout(() => {
+      order.push(order.shift());
+      topCard.classList.remove('touch-revealed');
+      topCard.classList.add('no-transition');
+      applyPositions();
+      void topCard.offsetWidth; // force reflow so the snap-back is instant
+      topCard.classList.remove('no-transition');
+      topCard.classList.remove('exiting');
+    }, 480);
+  }
+
+  function handleActivate(e) {
+    const card = e.currentTarget;
+    if (!card.classList.contains('pos-0')) return;
+
+    if (isTouch && !card.classList.contains('touch-revealed')) {
+      // First tap on touch devices reveals the lore instead of cycling immediately
+      e.preventDefault();
+      card.classList.add('touch-revealed');
+      return;
+    }
+    advance(card);
+  }
+
+  order.forEach(card => {
+    card.addEventListener('click', handleActivate);
+    card.addEventListener('keydown', (e) => {
+      if (e.key === 'Enter' || e.key === ' ') {
+        e.preventDefault();
+        handleActivate({ currentTarget: card, preventDefault: () => {} });
+      }
+    });
+  });
+
+  applyPositions();
+})();
 </script>
 
 </body>
