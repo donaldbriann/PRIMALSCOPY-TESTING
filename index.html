@@ -49,6 +49,12 @@
     --text: #F0E8E8;
     --text-muted: #8A6A6A;
     --border: rgba(192,17,10,0.25);
+    --gold: #E8B948;
+    --gold-bright: #FFDA8A;
+    --silver: #C7CBD4;
+    --silver-bright: #F0F2F5;
+    --bronze: #C97C4C;
+    --bronze-bright: #E8A574;
   }
 
   html { scroll-behavior: smooth; }
@@ -1052,6 +1058,263 @@
     .stack-lore { font-size: 0.8rem; }
   }
 
+  /* ART CONTEST */
+  #contest {
+    background:
+      radial-gradient(ellipse 55% 40% at 18% 0%, rgba(232,185,72,0.07), transparent 60%),
+      radial-gradient(ellipse 50% 45% at 88% 100%, rgba(192,17,10,0.12), transparent 60%),
+      var(--surface);
+    position: relative;
+  }
+
+  .contest-intro {
+    text-align: center;
+    margin-bottom: 1rem;
+  }
+
+  .contest-pool {
+    font-family: 'Cinzel', serif;
+    font-size: 1.15rem;
+    color: var(--red-bright);
+    letter-spacing: 0.03em;
+    margin-bottom: 0.5rem;
+  }
+
+  .contest-desc {
+    color: var(--text-muted);
+    max-width: 560px;
+    margin: 0 auto;
+    font-size: 0.92rem;
+  }
+
+  .contest-view-btn {
+    margin-top: 1.5rem;
+  }
+
+  .prize-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.1fr 1fr;
+    align-items: end;
+    gap: 1.5rem;
+    margin-top: 3.5rem;
+  }
+
+  .prize-card {
+    --card-accent: var(--red-bright);
+    --card-accent-bright: var(--red-bright);
+    background: linear-gradient(165deg, var(--surface2) 0%, var(--black) 65%);
+    border: 1px solid var(--border);
+    padding: 2rem 1.5rem;
+    text-align: center;
+    position: relative;
+    overflow: hidden;
+    transition: transform 0.35s cubic-bezier(.2,.8,.25,1), box-shadow 0.35s ease, border-color 0.35s ease;
+  }
+
+  .prize-card[data-rank="gold"] {
+    order: 2;
+    z-index: 3;
+    padding: 2.5rem 1.5rem 2.25rem;
+    border-color: rgba(232,185,72,0.45);
+    box-shadow: 0 0 0 1px rgba(232,185,72,0.12), 0 24px 55px rgba(232,185,72,0.14);
+    --card-accent: var(--gold);
+    --card-accent-bright: var(--gold-bright);
+  }
+  .prize-card[data-rank="silver"] {
+    order: 1;
+    z-index: 2;
+    margin-bottom: -0.75rem;
+    --card-accent: var(--silver);
+    --card-accent-bright: var(--silver-bright);
+  }
+  .prize-card[data-rank="bronze"] {
+    order: 3;
+    z-index: 2;
+    margin-bottom: -0.75rem;
+    --card-accent: var(--bronze);
+    --card-accent-bright: var(--bronze-bright);
+  }
+
+  .prize-card:hover { transform: translateY(-6px); border-color: var(--card-accent); }
+  .prize-card[data-rank="gold"]:hover { transform: translateY(-9px) scale(1.015); }
+
+  .prize-card::before,
+  .prize-card::after {
+    content: '';
+    position: absolute;
+    width: 20px; height: 20px;
+    opacity: 0.55;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .prize-card::before { top: 10px; left: 10px; border-top: 1px solid var(--card-accent); border-left: 1px solid var(--card-accent); }
+  .prize-card::after { top: 10px; right: 10px; border-top: 1px solid var(--card-accent); border-right: 1px solid var(--card-accent); }
+  .prize-card:hover::before, .prize-card:hover::after { opacity: 1; }
+
+  .prize-shine {
+    position: absolute;
+    inset: 0;
+    background: linear-gradient(115deg, transparent 42%, rgba(255,255,255,0.14) 50%, transparent 58%);
+    transform: translateX(-130%);
+    pointer-events: none;
+  }
+  .prize-card:hover .prize-shine { animation: prize-sweep 0.9s ease forwards; }
+  .prize-card[data-rank="gold"] .prize-shine { animation: prize-sweep 2.8s ease-in-out infinite; }
+
+  @keyframes prize-sweep {
+    to { transform: translateX(130%); }
+  }
+
+  .prize-tag {
+    font-size: 0.62rem;
+    letter-spacing: 0.28em;
+    text-transform: uppercase;
+    color: var(--gold-bright);
+    margin-bottom: 0.9rem;
+    opacity: 0.9;
+  }
+
+  .prize-rank {
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    width: 42px;
+    height: 42px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 28%, var(--card-accent-bright) 0%, var(--card-accent) 55%, var(--red-deep) 140%);
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 1.05rem;
+    color: #1a0e0a;
+    margin-bottom: 1.1rem;
+    box-shadow: 0 4px 14px rgba(0,0,0,0.5), inset 0 1px 1px rgba(255,255,255,0.45);
+  }
+  .prize-card[data-rank="gold"] .prize-rank { width: 52px; height: 52px; font-size: 1.3rem; }
+
+  .prize-amount {
+    font-family: 'Cinzel', serif;
+    font-size: 1.65rem;
+    font-weight: 900;
+    margin-bottom: 1.35rem;
+    background: linear-gradient(180deg, var(--card-accent-bright) 0%, var(--card-accent) 100%);
+    -webkit-background-clip: text;
+    background-clip: text;
+    -webkit-text-fill-color: transparent;
+    filter: drop-shadow(0 2px 6px rgba(0,0,0,0.45));
+  }
+  .prize-card[data-rank="gold"] .prize-amount { font-size: 2.05rem; }
+
+  .prize-amount span {
+    font-size: 0.8rem;
+    font-weight: 700;
+    color: var(--text-muted);
+    margin-left: 0.3rem;
+    -webkit-text-fill-color: var(--text-muted);
+  }
+
+  .prize-perks {
+    list-style: none;
+    text-align: left;
+  }
+
+  .prize-perks li {
+    font-size: 0.82rem;
+    color: var(--text-muted);
+    line-height: 1.6;
+    padding-left: 1.1rem;
+    position: relative;
+    margin-bottom: 0.4rem;
+  }
+
+  .prize-perks li::before {
+    content: '—';
+    position: absolute;
+    left: 0;
+    color: var(--card-accent);
+  }
+
+  .contest-rules {
+    max-width: 620px;
+    margin: 3rem auto 0;
+    border-top: 1px solid var(--border);
+    padding-top: 2rem;
+  }
+
+  .contest-rules h3 {
+    font-family: 'Cinzel', serif;
+    font-size: 0.95rem;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    color: var(--text);
+    margin-bottom: 1rem;
+    text-align: center;
+  }
+
+  .contest-rules ol {
+    list-style: none;
+    counter-reset: rule-counter;
+  }
+
+  .contest-rules li {
+    counter-increment: rule-counter;
+    font-size: 0.88rem;
+    color: var(--text-muted);
+    line-height: 1.7;
+    padding-left: 1.75rem;
+    position: relative;
+    margin-bottom: 0.6rem;
+  }
+
+  .contest-rules li::before {
+    content: counter(rule-counter);
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 1.15rem;
+    height: 1.15rem;
+    border: 1px solid var(--red);
+    color: var(--red-bright);
+    font-size: 0.7rem;
+    font-family: 'Cinzel', serif;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .contest-footer {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: center;
+    gap: 1rem;
+    margin-top: 2.5rem;
+  }
+
+  .contest-deadline {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.4rem;
+    background: rgba(192,17,10,0.08);
+    border: 1px solid var(--border);
+    color: var(--red-bright);
+    font-size: 0.72rem;
+    letter-spacing: 0.15em;
+    text-transform: uppercase;
+    padding: 0.5rem 1rem;
+  }
+
+  @media (max-width: 720px) {
+    .prize-grid { grid-template-columns: 1fr; gap: 1.25rem; margin-top: 2rem; }
+    .prize-card[data-rank="gold"],
+    .prize-card[data-rank="silver"],
+    .prize-card[data-rank="bronze"] { margin-bottom: 0; padding: 2rem 1.5rem; }
+    .prize-card[data-rank="gold"] { order: 1; }
+    .prize-card[data-rank="silver"] { order: 2; }
+    .prize-card[data-rank="bronze"] { order: 3; }
+    .contest-rules { margin-top: 2rem; }
+    .contest-footer { flex-direction: column; }
+  }
+
 </style>
 </head>
 <body>
@@ -1109,6 +1372,65 @@
 
 <div class="divider"></div>
 
+<!-- ART CONTEST -->
+<section id="contest">
+  <div class="container">
+    <div class="contest-intro fade-in">
+      <h2 class="section-title">Art Contest</h2>
+      <a href="https://x.com/primalsnftx/status/2079990613831778435?s=46" target="_blank" class="btn-solid contest-view-btn">View Art Contest on X</a>
+      <p class="contest-pool" style="margin-top: 1.75rem;">$2,000 in total rewards for the top 3</p>
+      <p class="contest-desc">Draw a custom 1/1 using our Naked Primal template. Every winner gets their art minted on chain as a real Primals NFT.</p>
+    </div>
+
+    <div class="prize-grid fade-in">
+      <div class="prize-card" data-rank="gold">
+        <div class="prize-shine"></div>
+        <p class="prize-tag">Grand Prize</p>
+        <span class="prize-rank">1</span>
+        <p class="prize-amount">$500 <span>USDC</span></p>
+        <ul class="prize-perks">
+          <li>5 free Primal NFT mints</li>
+          <li>Custom 1/1 Primals NFT (your art on chain)</li>
+        </ul>
+      </div>
+      <div class="prize-card" data-rank="silver">
+        <div class="prize-shine"></div>
+        <span class="prize-rank">2</span>
+        <p class="prize-amount">$300 <span>USDC</span></p>
+        <ul class="prize-perks">
+          <li>5 free Primal NFT mints</li>
+          <li>Custom 1/1 Primals NFT (your art on chain)</li>
+        </ul>
+      </div>
+      <div class="prize-card" data-rank="bronze">
+        <div class="prize-shine"></div>
+        <span class="prize-rank">3</span>
+        <p class="prize-amount">$200 <span>USDC</span></p>
+        <ul class="prize-perks">
+          <li>5 free Primal NFT mints</li>
+          <li>Custom 1/1 Primals NFT (your art on chain)</li>
+        </ul>
+      </div>
+    </div>
+
+    <div class="contest-rules fade-in">
+      <h3>How to enter</h3>
+      <ol>
+        <li>Draw a custom 1/1 using the Naked Primal template.</li>
+        <li>Tag 2 artist friends to join the movement.</li>
+        <li>Submit your final piece via quote repost, tagging @PrimalsNFTx.</li>
+        <li>AI-generated art is not allowed.</li>
+      </ol>
+    </div>
+
+    <div class="contest-footer fade-in">
+      <span class="contest-deadline">Deadline · Aug 5, 5PM UTC</span>
+    </div>
+  </div>
+</section>
+
+<div class="divider"></div>
+
 <!-- LORE -->
 <section id="lore">
   <div class="container">
@@ -1152,78 +1474,78 @@
 <section id="gallery">
   <div class="container">
     <div class="fade-in" style="text-align: center; margin-bottom: 1rem;">
-      <p class="section-eyebrow">Sneak Peek</p>
-      <h2 class="section-title">Some Primals have been Awakened</h2>
+      <p class="section-eyebrow">Sneak peek</p>
+      <h2 class="section-title">The Awakened Primals</h2>
       <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto; font-size: 0.92rem;">A handful of Primals have surfaced early. Hover to inspect. Click to reveal the next.</p>
     </div>
 
     <div class="stack-wrap fade-in">
       <div class="card-stack" id="card-stack">
         <div class="stack-card pos-0" tabindex="0" data-order="0">
-          <img src="NakedPrimal.jpg" alt="Naked Primal" class="stack-img" />
+          <img src="BASE_1.jpg" alt="Naked Primal" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Naked Primal</p>
             <p class="stack-lore">Once unchallenged, this naked Primal is eager to take it back after losing everything during the fall of his legion.</p>
           </div>
         </div>
         <div class="stack-card pos-1" tabindex="0" data-order="1">
-          <img src="TigerClaus.jpg" alt="Tiger Claus" class="stack-img" />
+          <img src="PF4.jpg" alt="Tiger Claus" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Tiger Claus</p>
             <p class="stack-lore">The ruthless apex enforcer of the Primal wilds, gifts fear and loyalty across his legion.</p>
           </div>
         </div>
         <div class="stack-card pos-2" tabindex="0" data-order="2">
-          <img src="DragonWarlord.jpg" alt="Dragon Warlord" class="stack-img" />
+          <img src="SNEAKZZ.jpg" alt="Dragon Warlord" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Dragon Warlord</p>
             <p class="stack-lore">Bound by oath to an ancient dragon, he channels its fury through every strike. When his beam ignites, even the legends retreat.</p>
           </div>
         </div>
         <div class="stack-card pos-3" tabindex="0" data-order="3">
-          <img src="KingPrimal.jpg" alt="King Primal" class="stack-img" />
+          <img src="HM9XHC-WIAAx58R.jpg" alt="King Primal" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">King Primal</p>
             <p class="stack-lore">Crowned in the ruins of past empires, King Primal fought for his throne, promising treasure to the loyal and total annihilation to all else.</p>
           </div>
         </div>
         <div class="stack-card" tabindex="0" data-order="4">
-          <img src="PrimalEmperor.jpg" alt="Primal Emperor" class="stack-img" />
+          <img src="Emp.jpg" alt="Primal Emperor" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Primal Emperor</p>
             <p class="stack-lore">Donned in his legendary fur bounty, the Primal Emperor symbolizes mastery of nature, abundance, and instinctive dominance.</p>
           </div>
         </div>
         <div class="stack-card" tabindex="0" data-order="5">
-          <img src="AstralPrimal.jpg" alt="Astral Primal" class="stack-img" />
+          <img src="HOLY.jpg" alt="Astral Primal" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Astral Primal</p>
             <p class="stack-lore">A star touched evolution of the unfinished lineage, forever suspended between primal instinct and transcendent knowledge.</p>
           </div>
         </div>
         <div class="stack-card" tabindex="0" data-order="6">
-          <img src="CaptainCloud.jpg" alt="Captain Cloud" class="stack-img" />
+          <img src="IMG_7240.jpg" alt="Captain Cloud" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Captain Cloud</p>
             <p class="stack-lore">Before the maps were drawn and the stars were named, Captain Cloud sailed the unseen currents between worlds seeking the Awakening.</p>
           </div>
         </div>
         <div class="stack-card" tabindex="0" data-order="7">
-          <img src="InfernalWarlord.jpg" alt="Infernal Warlord" class="stack-img" />
+          <img src="image__4_.jpg" alt="Infernal Warlord" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Infernal Warlord</p>
             <p class="stack-lore">Born of the old blood, the Infernal Warlord rejected the slow crawl of evolution and forged himself in primordial blaze.</p>
           </div>
         </div>
         <div class="stack-card" tabindex="0" data-order="8">
-          <img src="PrimalSamurai.jpg" alt="Primal Samurai" class="stack-img" />
+          <img src="image__2_.jpg" alt="Primal Samurai" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Primal Samurai</p>
             <p class="stack-lore">Forged by forgotten relics and guided by the Awakening, he stands between instinct and evolution, guarding the path to what comes next.</p>
           </div>
         </div>
         <div class="stack-card" tabindex="0" data-order="9">
-          <img src="SerpentGuardian.jpg" alt="Serpent Guardian" class="stack-img" />
+          <img src="image__1_.jpg" alt="Serpent Guardian" class="stack-img" />
           <div class="stack-info">
             <p class="stack-name">Serpent Guardian</p>
             <p class="stack-lore">Once the sacred guardian of the primal groves, it rewrote its flesh. Now it walks the graveyard of its own kind, waiting for the final call of the Primals.</p>
@@ -1299,8 +1621,6 @@
     </div>
   </div>
 </section>
-
-
 
 <div class="divider"></div>
 
