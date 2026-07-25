@@ -1315,134 +1315,267 @@
     .contest-footer { flex-direction: column; }
   }
 
-  /* CINEMATIC LOADER */
+  /* ══════════════════════════════════════════════════════════
+     CINEMATIC LOADER
+     A premium, game-trailer-style loading sequence. Layered
+     atmosphere (fog, embers, dust, rays, grain) sits behind a
+     logo that resolves out of darkness, a cycling status line,
+     and a glowing progress readout. GSAP drives all motion;
+     see the loader script near the end of the file.
+     ══════════════════════════════════════════════════════════ */
+
+  :root {
+    --loader-bg: #050505;
+    --loader-gold: var(--red);
+    --loader-gold-bright: var(--red-bright);
+    --loader-ember: var(--red-bright);
+    --loader-fog: rgba(255,255,255,0.045);
+  }
+
   body.loading { overflow: hidden; }
 
   #loader {
     position: fixed;
     inset: 0;
     z-index: 9999;
-    background: var(--black);
+    background: var(--loader-bg);
+    overflow: hidden;
     display: flex;
     align-items: center;
     justify-content: center;
-    transition: opacity 0.6s ease, visibility 0.6s ease;
   }
-  #loader.loader-hidden {
-    opacity: 0;
-    visibility: hidden;
+
+  /* -- Atmosphere layers -- */
+  .loader-fog-layer {
+    position: absolute;
+    inset: -10%;
     pointer-events: none;
+    border-radius: 50%;
+    filter: blur(60px);
+    opacity: 0.5;
+    will-change: transform, opacity;
+  }
+  .loader-fog-1 { background: radial-gradient(ellipse at 30% 70%, var(--loader-fog), transparent 60%); }
+  .loader-fog-2 { background: radial-gradient(ellipse at 75% 30%, rgba(192,17,10,0.06), transparent 55%); }
+  .loader-fog-3 { background: radial-gradient(ellipse at 50% 100%, rgba(192,17,10,0.06), transparent 60%); }
+
+  .loader-rays {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    opacity: 0.22;
+    background:
+      conic-gradient(from 200deg at 50% 40%,
+        transparent 0deg, rgba(224,26,16,0.12) 8deg, transparent 20deg,
+        transparent 160deg, rgba(224,26,16,0.08) 168deg, transparent 185deg,
+        transparent 340deg, rgba(224,26,16,0.1) 348deg, transparent 360deg);
+    will-change: transform, opacity;
   }
 
-  .loader-scratches {
-    position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
-    background-image: repeating-linear-gradient(-55deg, transparent, transparent 3px, rgba(192,17,10,0.8) 3px, rgba(192,17,10,0.8) 4px);
+  .loader-embers, .loader-dust {
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    overflow: hidden;
   }
-  .loader-scanlines {
-    position: absolute; inset: 0; opacity: 0.4; pointer-events: none;
-    background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px);
+  .ember-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: var(--loader-ember);
+    box-shadow: 0 0 6px 1px rgba(224,26,16,0.85);
+    opacity: 0;
+    will-change: transform, opacity;
   }
+  .dust-particle {
+    position: absolute;
+    border-radius: 50%;
+    background: rgba(240,232,232,0.5);
+    opacity: 0;
+    will-change: transform, opacity;
+  }
+
+  .loader-grain {
+    position: absolute;
+    inset: -50%;
+    width: 200%;
+    height: 200%;
+    pointer-events: none;
+    opacity: 0.05;
+    mix-blend-mode: overlay;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+    will-change: transform;
+  }
+
   .loader-vignette {
-    position: absolute; inset: 0; pointer-events: none;
-    background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(5,4,4,0.9) 100%);
+    position: absolute;
+    inset: 0;
+    pointer-events: none;
+    background: radial-gradient(ellipse 75% 75% at 50% 50%, transparent 35%, rgba(3,2,2,0.92) 100%);
   }
-  .loader-corner { position: absolute; width: 40px; height: 40px; opacity: 0.5; }
-  .loader-corner.tl { top: 2rem; left: 2rem; border-top: 1px solid var(--red); border-left: 1px solid var(--red); }
-  .loader-corner.tr { top: 2rem; right: 2rem; border-top: 1px solid var(--red); border-right: 1px solid var(--red); }
-  .loader-corner.bl { bottom: 2rem; left: 2rem; border-bottom: 1px solid var(--red); border-left: 1px solid var(--red); }
-  .loader-corner.br { bottom: 2rem; right: 2rem; border-bottom: 1px solid var(--red); border-right: 1px solid var(--red); }
 
-  .loader-content {
+  /* -- Foreground stage -- */
+  .loader-stage {
     position: relative;
-    z-index: 2;
+    z-index: 3;
     display: flex;
     flex-direction: column;
     align-items: center;
     text-align: center;
     padding: 0 1.5rem;
+    will-change: transform, opacity, filter;
   }
 
-  .loader-logo {
-    width: min(220px, 55vw);
+  .loader-logo-wrap {
+    position: relative;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+
+  .loader-logo-glow {
+    position: absolute;
+    width: 220px;
+    height: 220px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(224,26,16,0.4) 0%, transparent 70%);
+    filter: blur(18px);
+    opacity: 0;
+    will-change: opacity, transform;
+  }
+
+  .loader-logo-v2 {
+    position: relative;
+    width: min(210px, 52vw);
     display: block;
     opacity: 0;
+    filter: blur(14px) brightness(0.7);
+    transform: scale(0.88);
+    will-change: opacity, filter, transform;
   }
 
-  .loader-eyebrow {
-    font-size: 0.68rem;
-    letter-spacing: 0.35em;
+  .loader-message {
+    position: relative;
+    height: 1.2rem;
+    margin-top: 2.1rem;
+    font-family: 'Inter', sans-serif;
+    font-size: 0.72rem;
+    letter-spacing: 0.3em;
     text-transform: uppercase;
-    color: var(--red-bright);
-    margin-top: 1.75rem;
+    color: var(--loader-gold-bright);
     opacity: 0;
+    will-change: opacity, transform;
   }
 
-  .loader-bar-track {
-    width: min(280px, 60vw);
-    height: 2px;
-    background: rgba(192,17,10,0.15);
-    margin-top: 1.5rem;
+  .loader-progress {
+    display: flex;
+    align-items: center;
+    gap: 0.9rem;
+    margin-top: 1.6rem;
+    opacity: 0;
+    will-change: opacity;
+  }
+
+  .loader-progress-track {
+    width: min(260px, 52vw);
+    height: 1px;
+    background: rgba(192,17,10,0.18);
     position: relative;
     overflow: hidden;
   }
 
-  .loader-bar-fill {
+  .loader-progress-fill {
     position: absolute;
-    inset: 0 100% 0 0;
-    background: var(--red-bright);
-    box-shadow: 0 0 10px rgba(224,26,16,0.6);
-    animation: loader-fill 3.2s cubic-bezier(.4,0,.2,1) forwards;
+    inset: 0;
+    width: 0%;
+    background: linear-gradient(90deg, var(--loader-gold), var(--loader-gold-bright));
+    box-shadow: 0 0 8px rgba(224,26,16,0.8);
+    will-change: width;
   }
-  @keyframes loader-fill { to { right: 0; } }
 
-  @keyframes loader-logo-in {
-    0%   { opacity: 0; clip-path: inset(45% 0 45% 0); transform: translateX(0); filter: drop-shadow(0 0 0 transparent); }
-    8%   { opacity: 1; clip-path: inset(10% 0 60% 0); transform: translateX(-6px); }
-    10%  { clip-path: inset(60% 0 5% 0); transform: translateX(5px); }
-    12%  { clip-path: inset(0 0 0 0); transform: translateX(0); }
-    40%  { clip-path: inset(0 0 0 0); transform: translateX(0); filter: drop-shadow(0 0 30px rgba(224,26,16,0.65)); }
-    55%  { clip-path: inset(35% 0 40% 0); transform: translateX(4px); }
-    57%  { clip-path: inset(0 0 0 0); transform: translateX(0); }
-    100% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateX(0); filter: drop-shadow(0 0 40px rgba(224,26,16,0.75)); }
+  .loader-progress-shimmer {
+    position: absolute;
+    top: 0; bottom: 0;
+    width: 40%;
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+    transform: translateX(-120%);
+    will-change: transform;
   }
-  .loader-logo.play { animation: loader-logo-in 2.6s ease forwards; }
 
-  @keyframes loader-fade-up {
-    from { opacity: 0; transform: translateY(8px); }
-    to { opacity: 1; transform: translateY(0); }
+  .loader-progress-pct {
+    font-family: 'Cinzel', serif;
+    font-size: 0.75rem;
+    font-weight: 700;
+    letter-spacing: 0.05em;
+    color: var(--loader-gold-bright);
+    min-width: 2.6em;
+    text-align: left;
+    font-variant-numeric: tabular-nums;
   }
-  .loader-eyebrow.play { animation: loader-fade-up 0.8s ease 0.4s forwards; }
 
+  /* -- Reduced motion: simple, near-static fallback -- */
   @media (prefers-reduced-motion: reduce) {
-    .loader-logo, .loader-eyebrow { animation: none !important; opacity: 1 !important; }
-    .loader-bar-fill { animation: none !important; right: 0 !important; }
+    .loader-fog-layer, .loader-rays, .loader-grain,
+    .ember-particle, .dust-particle { display: none; }
+    .loader-logo-v2 {
+      opacity: 1 !important;
+      filter: none !important;
+      transform: none !important;
+    }
+    .loader-logo-glow { opacity: 0.5 !important; }
+    .loader-message, .loader-progress { opacity: 1 !important; }
   }
 
   @media (max-width: 720px) {
-    .loader-logo { width: min(170px, 50vw); }
-    .loader-eyebrow { font-size: 0.6rem; margin-top: 1.4rem; }
-    .loader-bar-track { margin-top: 1.2rem; }
+    .loader-logo-v2 { width: min(160px, 48vw); }
+    .loader-logo-glow { width: 160px; height: 160px; }
+    .loader-message { font-size: 0.62rem; letter-spacing: 0.24em; margin-top: 1.7rem; }
+    .loader-progress { margin-top: 1.3rem; }
+  }
+
+  /* -- Site reveal target: the camera-push wrapper -- */
+  #site-content {
+    transform: scale(1.045);
+    filter: blur(6px);
+    will-change: transform, filter;
+  }
+  @media (prefers-reduced-motion: reduce) {
+    #site-content { transform: none; filter: none; }
   }
 
 </style>
 </head>
 <body class="loading">
 
-<div id="loader">
-  <div class="loader-scratches"></div>
-  <div class="loader-scanlines"></div>
+<div id="loader" role="status" aria-label="Loading PRIMALS">
+  <!-- Atmosphere: fog, light rays, embers, dust, grain, vignette -->
+  <div class="loader-fog-layer loader-fog-1" id="loader-fog-1"></div>
+  <div class="loader-fog-layer loader-fog-2" id="loader-fog-2"></div>
+  <div class="loader-fog-layer loader-fog-3" id="loader-fog-3"></div>
+  <div class="loader-rays" id="loader-rays"></div>
+  <div class="loader-embers" id="loader-embers"></div>
+  <div class="loader-dust" id="loader-dust"></div>
+  <div class="loader-grain" id="loader-grain"></div>
   <div class="loader-vignette"></div>
-  <div class="loader-corner tl"></div>
-  <div class="loader-corner tr"></div>
-  <div class="loader-corner bl"></div>
-  <div class="loader-corner br"></div>
-  <div class="loader-content">
-    <img src="primals-logo.jpg" alt="PRIMALS" class="loader-logo" id="loader-logo" />
-    <p class="loader-eyebrow" id="loader-eyebrow">Awakening</p>
-    <div class="loader-bar-track"><div class="loader-bar-fill"></div></div>
+
+  <!-- Foreground: logo, cycling message, progress -->
+  <div class="loader-stage" id="loader-stage">
+    <div class="loader-logo-wrap">
+      <div class="loader-logo-glow" id="loader-logo-glow"></div>
+      <img src="primals-logo.jpg" alt="PRIMALS" class="loader-logo-v2" id="loader-logo-v2" />
+    </div>
+    <p class="loader-message" id="loader-message"></p>
+    <div class="loader-progress" id="loader-progress">
+      <div class="loader-progress-track">
+        <div class="loader-progress-fill" id="loader-progress-fill">
+          <div class="loader-progress-shimmer" id="loader-progress-shimmer"></div>
+        </div>
+      </div>
+      <span class="loader-progress-pct" id="loader-progress-pct">0%</span>
+    </div>
   </div>
 </div>
 
+<div id="site-content">
 <nav>
   <a href="#" class="nav-logo">PRIMALS</a>
   <ul class="nav-links">
@@ -1782,39 +1915,211 @@
   <p class="footer-logo">PRIMALS</p>
   <p class="footer-text">© 2026 PRIMALS NFT. Built on Solana. All rights reserved.</p>
 </footer>
+</div><!-- /#site-content -->
 
+<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
 <script>
-// Cinematic loading screen
-(function() {
+/* ════════════════════════════════════════════════════════════
+   CINEMATIC LOADING SCREEN
+   Config lives at the top — timings, messages, and easing are
+   all tunable in one place. GSAP timelines drive every layer;
+   the reduced-motion branch skips straight to a static reveal.
+   ════════════════════════════════════════════════════════════ */
+(function () {
   const loader = document.getElementById('loader');
-  const logo = document.getElementById('loader-logo');
-  const eyebrow = document.getElementById('loader-eyebrow');
   if (!loader) return;
 
-  requestAnimationFrame(() => {
-    logo.classList.add('play');
-    eyebrow.classList.add('play');
+  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  const hasGSAP = typeof window.gsap !== 'undefined';
+
+  // ---- Config ----------------------------------------------------------
+  const MESSAGES = [
+    'Initializing...',
+    'Loading DNA...',
+    'Forging Traits...',
+    'Awakening the Primals...',
+    'Synchronizing the Jungle...',
+    'Entering the Realm...'
+  ];
+  const MESSAGE_DURATION = 1.0;   // seconds each message is fully visible
+  const MESSAGE_TRANSITION = 0.35; // seconds fade/slide between messages
+  const MIN_DURATION_MS = (MESSAGES.length * (MESSAGE_DURATION + MESSAGE_TRANSITION) + 1.1) * 1000;
+  const MAX_WAIT_MS = 9000; // absolute safety cap even if assets stall
+
+  const elFog1 = document.getElementById('loader-fog-1');
+  const elFog2 = document.getElementById('loader-fog-2');
+  const elFog3 = document.getElementById('loader-fog-3');
+  const elRays = document.getElementById('loader-rays');
+  const elGrain = document.getElementById('loader-grain');
+  const elEmbers = document.getElementById('loader-embers');
+  const elDust = document.getElementById('loader-dust');
+  const elLogo = document.getElementById('loader-logo-v2');
+  const elGlow = document.getElementById('loader-logo-glow');
+  const elMessage = document.getElementById('loader-message');
+  const elProgress = document.getElementById('loader-progress');
+  const elFill = document.getElementById('loader-progress-fill');
+  const elShimmer = document.getElementById('loader-progress-shimmer');
+  const elPct = document.getElementById('loader-progress-pct');
+  const elStage = document.getElementById('loader-stage');
+  const siteContent = document.getElementById('site-content');
+
+  // ---- Ambient particle generation (embers + dust) ----------------------
+  function spawnParticles(container, className, count, opts) {
+    const frag = document.createDocumentFragment();
+    const nodes = [];
+    for (let i = 0; i < count; i++) {
+      const p = document.createElement('div');
+      p.className = className;
+      const size = opts.minSize + Math.random() * (opts.maxSize - opts.minSize);
+      p.style.left = Math.random() * 100 + '%';
+      p.style.top = Math.random() * 100 + '%';
+      p.style.width = size + 'px';
+      p.style.height = size + 'px';
+      frag.appendChild(p);
+      nodes.push(p);
+    }
+    container.appendChild(frag);
+    return nodes;
+  }
+
+  // ---- Reduced motion: minimal static version ---------------------------
+  if (prefersReducedMotion || !hasGSAP) {
+    if (elMessage) elMessage.textContent = MESSAGES[MESSAGES.length - 1];
+    if (elFill) elFill.style.width = '100%';
+    if (elPct) elPct.textContent = '100%';
+    const holdMs = 700;
+    setTimeout(() => {
+      loader.style.transition = 'opacity 0.5s ease';
+      loader.style.opacity = '0';
+      document.body.classList.remove('loading');
+      setTimeout(() => loader.remove(), 550);
+    }, holdMs);
+    return;
+  }
+
+  // ---- Full cinematic sequence (GSAP) -----------------------------------
+  const embers = spawnParticles(elEmbers, 'ember-particle', 16, { minSize: 2, maxSize: 5 });
+  const dust = spawnParticles(elDust, 'dust-particle', 26, { minSize: 1, maxSize: 2.5 });
+
+  // Slow drifting fog layers, looping
+  gsap.to(elFog1, { x: 40, y: -25, opacity: 0.7, duration: 9, ease: 'sine.inOut', repeat: -1, yoyo: true });
+  gsap.to(elFog2, { x: -35, y: 20, opacity: 0.35, duration: 11, ease: 'sine.inOut', repeat: -1, yoyo: true });
+  gsap.to(elFog3, { x: 25, y: -15, opacity: 0.45, duration: 13, ease: 'sine.inOut', repeat: -1, yoyo: true });
+  gsap.to(elRays, { rotation: 8, opacity: 0.3, duration: 14, ease: 'sine.inOut', repeat: -1, yoyo: true, transformOrigin: '50% 50%' });
+  gsap.to(elGrain, { x: '-=6%', y: '-=4%', duration: 0.12, ease: 'none', repeat: -1, repeatRefresh: true });
+
+  // Embers: rise gently with a slight sideways drift, looping per-particle
+  embers.forEach((el) => {
+    const dur = gsap.utils.random(4, 8);
+    const drift = gsap.utils.random(-30, 30);
+    const rise = gsap.utils.random(80, 160);
+    const peak = gsap.utils.random(0.35, 0.85);
+    gsap.fromTo(el,
+      { opacity: 0, y: 0, x: 0 },
+      {
+        opacity: peak, y: -rise, x: drift, duration: dur, ease: 'sine.out',
+        repeat: -1, delay: gsap.utils.random(0, 4),
+        onRepeat: () => gsap.set(el, { y: 0, x: 0 })
+      }
+    );
   });
 
-  const MIN_DURATION = 3400; // cinematic floor, ms
-  const MAX_WAIT = 6500;     // safety cap in case load never fires
+  // Dust: slow soft drift, gentle fade in/out
+  dust.forEach((el) => {
+    const dur = gsap.utils.random(7, 14);
+    const dx = gsap.utils.random(-20, 20);
+    const dy = gsap.utils.random(-20, 20);
+    const peak = gsap.utils.random(0.15, 0.45);
+    gsap.to(el, {
+      opacity: peak, x: dx, y: dy, duration: dur, ease: 'sine.inOut',
+      repeat: -1, yoyo: true, delay: gsap.utils.random(0, 5)
+    });
+  });
+
+  // Master intro timeline: logo emerges from blur/dark, glow pulses, message + progress fade in
+  const intro = gsap.timeline();
+  intro
+    .to(elLogo, { opacity: 1, filter: 'blur(0px) brightness(1)', scale: 1, duration: 1.7, ease: 'power2.out' }, 0)
+    .to(elGlow, { opacity: 1, duration: 1.4, ease: 'sine.out' }, 0.2)
+    .to(elProgress, { opacity: 1, duration: 0.6, ease: 'sine.out' }, 0.9)
+    .to(elMessage, { opacity: 1, duration: 0.5, ease: 'sine.out' }, 1.0);
+
+  // Recurring gentle glow pulse on the logo (independent of intro)
+  gsap.to(elGlow, {
+    scale: 1.12, opacity: 0.75, duration: 2.6, ease: 'sine.inOut',
+    repeat: -1, yoyo: true, delay: 1.6
+  });
+
+  // Shimmer sweep across the filled progress bar, repeating
+  gsap.fromTo(elShimmer, { xPercent: -150 }, {
+    xPercent: 250, duration: 1.4, ease: 'sine.inOut', repeat: -1, repeatDelay: 0.5
+  });
+
+  // Message cycler
+  let msgIndex = 0;
+  function nextMessage() {
+    const tl = gsap.timeline({ onComplete: () => {
+      msgIndex = (msgIndex + 1) % MESSAGES.length;
+      if (running) scheduleNext();
+    }});
+    tl.to(elMessage, { opacity: 0, y: -6, duration: MESSAGE_TRANSITION, ease: 'power1.in' })
+      .call(() => { elMessage.textContent = MESSAGES[msgIndex]; })
+      .fromTo(elMessage, { y: 6 }, { opacity: 1, y: 0, duration: MESSAGE_TRANSITION, ease: 'power1.out' })
+      .to({}, { duration: MESSAGE_DURATION }); // hold
+  }
+  let running = true;
+  function scheduleNext() { nextMessage(); }
+  elMessage.textContent = MESSAGES[0];
+  gsap.delayedCall(1.0, () => { if (running) scheduleNext(); });
+
+  // Progress counter: smoothly tweened 0 -> 100, tied to overall duration
+  const progressState = { value: 0 };
+  gsap.to(progressState, {
+    value: 100,
+    duration: MIN_DURATION_MS / 1000 - 0.5,
+    ease: 'power1.inOut',
+    onUpdate: () => {
+      const v = Math.round(progressState.value);
+      elFill.style.width = v + '%';
+      elPct.textContent = v + '%';
+    }
+  });
+
+  // ---- Exit sequence: final glow pulse, fog intensifies, dissolve + camera push ----
+  function playExit() {
+    running = false;
+    const exit = gsap.timeline({
+      onComplete: () => {
+        document.body.classList.remove('loading');
+        loader.remove();
+      }
+    });
+    exit
+      .to(progressState, { value: 100, duration: 0.3, onUpdate: () => {
+        elFill.style.width = Math.round(progressState.value) + '%';
+        elPct.textContent = Math.round(progressState.value) + '%';
+      } }, 0)
+      .to(elGlow, { scale: 1.4, opacity: 1, duration: 0.5, ease: 'power2.out' }, 0)
+      .to([elMessage, elProgress], { opacity: 0, duration: 0.4, ease: 'power1.in' }, 0.15)
+      .to([elFog1, elFog2, elFog3], { opacity: 0.9, duration: 0.5, ease: 'sine.out' }, 0.1)
+      .to(elGlow, { opacity: 0, scale: 1.7, duration: 0.6, ease: 'power2.in' }, 0.5)
+      .to(elLogo, { opacity: 0, scale: 1.06, filter: 'blur(6px) brightness(1.3)', duration: 0.6, ease: 'power2.in' }, 0.5)
+      .to(loader, { opacity: 0, duration: 0.8, ease: 'power2.inOut' }, 0.55)
+      .to(siteContent, { scale: 1, filter: 'blur(0px)', duration: 1.0, ease: 'power2.out' }, 0.5);
+  }
+
+  // ---- Timing gate: cinematic floor + real asset load, capped for safety ----
   const start = Date.now();
   let finished = false;
-
   function finish() {
     if (finished) return;
     finished = true;
     const elapsed = Date.now() - start;
-    const wait = Math.max(MIN_DURATION - elapsed, 0);
-    setTimeout(() => {
-      loader.classList.add('loader-hidden');
-      document.body.classList.remove('loading');
-      setTimeout(() => loader.remove(), 700);
-    }, wait);
+    const wait = Math.max(MIN_DURATION_MS - elapsed, 0);
+    setTimeout(playExit, wait);
   }
-
   window.addEventListener('load', finish);
-  setTimeout(finish, MAX_WAIT);
+  setTimeout(finish, MAX_WAIT_MS);
 })();
 
 function handleSubmit(e) {
