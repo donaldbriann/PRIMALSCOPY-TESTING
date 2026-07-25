@@ -1315,9 +1315,133 @@
     .contest-footer { flex-direction: column; }
   }
 
+  /* CINEMATIC LOADER */
+  body.loading { overflow: hidden; }
+
+  #loader {
+    position: fixed;
+    inset: 0;
+    z-index: 9999;
+    background: var(--black);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    transition: opacity 0.6s ease, visibility 0.6s ease;
+  }
+  #loader.loader-hidden {
+    opacity: 0;
+    visibility: hidden;
+    pointer-events: none;
+  }
+
+  .loader-scratches {
+    position: absolute; inset: 0; opacity: 0.06; pointer-events: none;
+    background-image: repeating-linear-gradient(-55deg, transparent, transparent 3px, rgba(192,17,10,0.8) 3px, rgba(192,17,10,0.8) 4px);
+  }
+  .loader-scanlines {
+    position: absolute; inset: 0; opacity: 0.4; pointer-events: none;
+    background-image: repeating-linear-gradient(0deg, transparent, transparent 3px, rgba(0,0,0,0.18) 3px, rgba(0,0,0,0.18) 4px);
+  }
+  .loader-vignette {
+    position: absolute; inset: 0; pointer-events: none;
+    background: radial-gradient(ellipse 80% 80% at 50% 50%, transparent 40%, rgba(5,4,4,0.9) 100%);
+  }
+  .loader-corner { position: absolute; width: 40px; height: 40px; opacity: 0.5; }
+  .loader-corner.tl { top: 2rem; left: 2rem; border-top: 1px solid var(--red); border-left: 1px solid var(--red); }
+  .loader-corner.tr { top: 2rem; right: 2rem; border-top: 1px solid var(--red); border-right: 1px solid var(--red); }
+  .loader-corner.bl { bottom: 2rem; left: 2rem; border-bottom: 1px solid var(--red); border-left: 1px solid var(--red); }
+  .loader-corner.br { bottom: 2rem; right: 2rem; border-bottom: 1px solid var(--red); border-right: 1px solid var(--red); }
+
+  .loader-content {
+    position: relative;
+    z-index: 2;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    padding: 0 1.5rem;
+  }
+
+  .loader-logo {
+    width: min(220px, 55vw);
+    display: block;
+    opacity: 0;
+  }
+
+  .loader-eyebrow {
+    font-size: 0.68rem;
+    letter-spacing: 0.35em;
+    text-transform: uppercase;
+    color: var(--red-bright);
+    margin-top: 1.75rem;
+    opacity: 0;
+  }
+
+  .loader-bar-track {
+    width: min(280px, 60vw);
+    height: 2px;
+    background: rgba(192,17,10,0.15);
+    margin-top: 1.5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .loader-bar-fill {
+    position: absolute;
+    inset: 0 100% 0 0;
+    background: var(--red-bright);
+    box-shadow: 0 0 10px rgba(224,26,16,0.6);
+    animation: loader-fill 3.2s cubic-bezier(.4,0,.2,1) forwards;
+  }
+  @keyframes loader-fill { to { right: 0; } }
+
+  @keyframes loader-logo-in {
+    0%   { opacity: 0; clip-path: inset(45% 0 45% 0); transform: translateX(0); filter: drop-shadow(0 0 0 transparent); }
+    8%   { opacity: 1; clip-path: inset(10% 0 60% 0); transform: translateX(-6px); }
+    10%  { clip-path: inset(60% 0 5% 0); transform: translateX(5px); }
+    12%  { clip-path: inset(0 0 0 0); transform: translateX(0); }
+    40%  { clip-path: inset(0 0 0 0); transform: translateX(0); filter: drop-shadow(0 0 30px rgba(224,26,16,0.65)); }
+    55%  { clip-path: inset(35% 0 40% 0); transform: translateX(4px); }
+    57%  { clip-path: inset(0 0 0 0); transform: translateX(0); }
+    100% { opacity: 1; clip-path: inset(0 0 0 0); transform: translateX(0); filter: drop-shadow(0 0 40px rgba(224,26,16,0.75)); }
+  }
+  .loader-logo.play { animation: loader-logo-in 2.6s ease forwards; }
+
+  @keyframes loader-fade-up {
+    from { opacity: 0; transform: translateY(8px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .loader-eyebrow.play { animation: loader-fade-up 0.8s ease 0.4s forwards; }
+
+  @media (prefers-reduced-motion: reduce) {
+    .loader-logo, .loader-eyebrow { animation: none !important; opacity: 1 !important; }
+    .loader-bar-fill { animation: none !important; right: 0 !important; }
+  }
+
+  @media (max-width: 720px) {
+    .loader-logo { width: min(170px, 50vw); }
+    .loader-eyebrow { font-size: 0.6rem; margin-top: 1.4rem; }
+    .loader-bar-track { margin-top: 1.2rem; }
+  }
+
 </style>
 </head>
-<body>
+<body class="loading">
+
+<div id="loader">
+  <div class="loader-scratches"></div>
+  <div class="loader-scanlines"></div>
+  <div class="loader-vignette"></div>
+  <div class="loader-corner tl"></div>
+  <div class="loader-corner tr"></div>
+  <div class="loader-corner bl"></div>
+  <div class="loader-corner br"></div>
+  <div class="loader-content">
+    <img src="primals-logo.jpg" alt="PRIMALS" class="loader-logo" id="loader-logo" />
+    <p class="loader-eyebrow" id="loader-eyebrow">Awakening</p>
+    <div class="loader-bar-track"><div class="loader-bar-fill"></div></div>
+  </div>
+</div>
 
 <nav>
   <a href="#" class="nav-logo">PRIMALS</a>
@@ -1660,6 +1784,39 @@
 </footer>
 
 <script>
+// Cinematic loading screen
+(function() {
+  const loader = document.getElementById('loader');
+  const logo = document.getElementById('loader-logo');
+  const eyebrow = document.getElementById('loader-eyebrow');
+  if (!loader) return;
+
+  requestAnimationFrame(() => {
+    logo.classList.add('play');
+    eyebrow.classList.add('play');
+  });
+
+  const MIN_DURATION = 3400; // cinematic floor, ms
+  const MAX_WAIT = 6500;     // safety cap in case load never fires
+  const start = Date.now();
+  let finished = false;
+
+  function finish() {
+    if (finished) return;
+    finished = true;
+    const elapsed = Date.now() - start;
+    const wait = Math.max(MIN_DURATION - elapsed, 0);
+    setTimeout(() => {
+      loader.classList.add('loader-hidden');
+      document.body.classList.remove('loading');
+      setTimeout(() => loader.remove(), 700);
+    }, wait);
+  }
+
+  window.addEventListener('load', finish);
+  setTimeout(finish, MAX_WAIT);
+})();
+
 function handleSubmit(e) {
   e.preventDefault();
   document.querySelector('.notify-form').style.display = 'none';
