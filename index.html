@@ -1316,192 +1316,6 @@
   }
 
   /* ══════════════════════════════════════════════════════════
-     CINEMATIC HERO — ACT 1: THE NAKED PRIMAL
-     Three.js renders the character + atmosphere into #primal-canvas.
-     This CSS only handles the overlay UI, vignette/grain, the
-     no-WebGL fallback image, and the blackout used during the
-     scroll-driven transition into Act 2. See the "CINEMATIC HERO"
-     script block near the end of the file for all motion logic.
-     ══════════════════════════════════════════════════════════ */
-
-  #hero-cinematic {
-    position: relative;
-    width: 100%;
-    height: 100vh;
-    min-height: 100svh;
-    overflow: hidden;
-    background: var(--black);
-  }
-
-  #primal-canvas {
-    position: absolute;
-    inset: 0;
-    width: 100%;
-    height: 100%;
-    display: block;
-  }
-
-  .hero-cine-fallback-img {
-    display: none; /* only shown if WebGL/Three.js is unavailable */
-    position: absolute;
-    bottom: 0;
-    left: 50%;
-    transform: translateX(-50%);
-    height: 82%;
-    max-width: 92%;
-    object-fit: contain;
-    filter: drop-shadow(0 0 70px rgba(192,17,10,0.35));
-    z-index: 1;
-  }
-  #hero-cinematic.no-webgl #primal-canvas { display: none; }
-  #hero-cinematic.no-webgl .hero-cine-fallback-img { display: block; }
-
-  .hero-cine-blackout {
-    position: absolute;
-    inset: 0;
-    z-index: 5;
-    background: #030202;
-    opacity: 0;
-    pointer-events: none;
-  }
-
-  .hero-cine-vignette {
-    position: absolute;
-    inset: 0;
-    pointer-events: none;
-    z-index: 2;
-    background: radial-gradient(ellipse 70% 78% at 50% 55%, transparent 30%, rgba(3,2,2,0.9) 100%);
-  }
-
-  .hero-cine-grain {
-    position: absolute;
-    inset: -50%;
-    width: 200%;
-    height: 200%;
-    pointer-events: none;
-    z-index: 2;
-    opacity: 0.045;
-    mix-blend-mode: overlay;
-    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='2' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
-    animation: cine-grain-shift 0.4s steps(2) infinite;
-  }
-  @keyframes cine-grain-shift {
-    0% { transform: translate(0,0); }
-    100% { transform: translate(-4%,-3%); }
-  }
-
-  .hero-cine-ui {
-    position: absolute;
-    top: 0; left: 0; right: 0;
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    text-align: center;
-    padding-top: 3rem;
-  }
-
-  .hero-cine-logo {
-    width: min(140px, 38vw);
-    opacity: 0;
-    transform: translateY(-10px);
-    filter: drop-shadow(0 0 18px rgba(192,17,10,0.45));
-  }
-
-  .hero-cine-tagline {
-    margin-top: 1rem;
-    font-family: 'Cinzel', serif;
-    font-size: clamp(0.85rem, 1.6vw, 1.05rem);
-    letter-spacing: 0.35em;
-    text-transform: uppercase;
-    color: var(--text);
-    opacity: 0;
-    transform: translateY(-8px);
-  }
-
-  .hero-cine-actions {
-    position: absolute;
-    bottom: 6.5rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    display: flex;
-    gap: 1rem;
-    flex-wrap: wrap;
-    justify-content: center;
-    opacity: 0;
-  }
-  .hero-cine-actions a {
-    padding: 0.8rem 1.9rem;
-    font-size: 0.78rem;
-    letter-spacing: 0.16em;
-    text-transform: uppercase;
-  }
-
-  .hero-cine-scroll {
-    position: absolute;
-    bottom: 2.25rem;
-    left: 50%;
-    transform: translateX(-50%);
-    z-index: 3;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    gap: 0.6rem;
-    opacity: 0;
-  }
-  .hero-cine-scroll span {
-    font-size: 0.6rem;
-    letter-spacing: 0.3em;
-    text-transform: uppercase;
-    color: var(--text-muted);
-  }
-  .hero-cine-scroll-line {
-    width: 1px;
-    height: 34px;
-    background: rgba(192,17,10,0.25);
-    position: relative;
-    overflow: hidden;
-  }
-  .hero-cine-scroll-line::after {
-    content: '';
-    position: absolute;
-    top: -100%; left: 0; right: 0;
-    height: 100%;
-    background: var(--red-bright);
-    animation: scroll-line-drop 2s ease-in-out infinite;
-  }
-  @keyframes scroll-line-drop {
-    0% { top: -100%; }
-    60%, 100% { top: 100%; }
-  }
-
-  @media (max-width: 720px) {
-    .hero-cine-logo { width: min(105px, 32vw); }
-    .hero-cine-tagline { font-size: 0.72rem; letter-spacing: 0.26em; }
-    .hero-cine-actions { bottom: 5.5rem; }
-    .hero-cine-actions a { padding: 0.75rem 1.5rem; font-size: 0.72rem; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .hero-cine-grain { display: none; }
-  }
-
-  /* -- ACT 2: headline reveal -- */
-  .reveal-line {
-    display: block;
-    opacity: 0;
-    transform: translateY(22px);
-  }
-  .reveal-line.no-anim { opacity: 1; transform: none; }
-
-  #reveal-sub, #reveal-actions {
-    opacity: 0;
-    transform: translateY(16px);
-  }
-  #reveal-sub.no-anim, #reveal-actions.no-anim { opacity: 1; transform: none; }
-
-  /* ══════════════════════════════════════════════════════════
      CINEMATIC LOADER
      A premium, game-trailer-style loading sequence. Layered
      atmosphere (fog, embers, dust, rays, grain) sits behind a
@@ -1662,8 +1476,8 @@
   }
 
   .loader-progress-track {
-    width: min(260px, 52vw);
-    height: 1px;
+    width: min(420px, 72vw);
+    height: 5px;
     background: rgba(192,17,10,0.18);
     position: relative;
     overflow: hidden;
@@ -1674,7 +1488,7 @@
     inset: 0;
     width: 0%;
     background: linear-gradient(90deg, var(--loader-gold), var(--loader-gold-bright));
-    box-shadow: 0 0 8px rgba(224,26,16,0.8);
+    box-shadow: 0 0 14px rgba(224,26,16,0.9), 0 0 4px rgba(224,26,16,0.9);
     will-change: width;
   }
 
@@ -1682,18 +1496,18 @@
     position: absolute;
     top: 0; bottom: 0;
     width: 40%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.65), transparent);
+    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.75), transparent);
     transform: translateX(-120%);
     will-change: transform;
   }
 
   .loader-progress-pct {
     font-family: 'Cinzel', serif;
-    font-size: 0.75rem;
+    font-size: 0.95rem;
     font-weight: 700;
     letter-spacing: 0.05em;
     color: var(--loader-gold-bright);
-    min-width: 2.6em;
+    min-width: 2.8em;
     text-align: left;
     font-variant-numeric: tabular-nums;
   }
@@ -1716,6 +1530,8 @@
     .loader-logo-glow { width: 160px; height: 160px; }
     .loader-message { font-size: 0.62rem; letter-spacing: 0.24em; margin-top: 1.7rem; }
     .loader-progress { margin-top: 1.3rem; }
+    .loader-progress-track { width: min(260px, 68vw); height: 4px; }
+    .loader-progress-pct { font-size: 0.82rem; }
   }
 
   /* -- Site reveal target: the camera-push wrapper -- */
@@ -1780,31 +1596,8 @@
   </div>
 </nav>
 
-<!-- CINEMATIC HERO — ACT 1: The Naked Primal emerges -->
-<section id="hero-cinematic">
-  <canvas id="primal-canvas"></canvas>
-  <img src="naked-primal-hero.png" alt="Naked Primal" class="hero-cine-fallback-img" id="primal-fallback-img" />
-  <div class="hero-cine-blackout" id="hero-cine-blackout"></div>
-  <div class="hero-cine-vignette"></div>
-  <div class="hero-cine-grain"></div>
-
-  <div class="hero-cine-ui">
-    <img src="primals-logo.jpg" alt="PRIMALS" class="hero-cine-logo" id="hero-cine-logo" />
-    <p class="hero-cine-tagline" id="hero-cine-tagline">Evolution Awakens.</p>
-    <div class="hero-cine-actions" id="hero-cine-actions">
-      <a href="#hero-reveal" class="btn-solid">Enter the Jungle</a>
-      <a href="https://discord.gg/ZRrWFfRVez" target="_blank" class="btn-outline">Join Discord</a>
-    </div>
-  </div>
-
-  <div class="hero-cine-scroll" id="hero-cine-scroll">
-    <span>Scroll to Discover</span>
-    <div class="hero-cine-scroll-line"></div>
-  </div>
-</section>
-
-<!-- CINEMATIC HERO — ACT 2: the reveal -->
-<section id="hero-reveal">
+<!-- HERO -->
+<section id="hero">
   <div class="hero-bg"></div>
   <div class="hero-scratches"></div>
   <div class="hero-vignette"></div>
@@ -1823,13 +1616,11 @@
       <span class="sol-dot"></span>
       On Solana
     </div>
-    <h1 class="hero-headline" id="reveal-headline">
-      <span class="reveal-line">Not fully apes.</span>
-      <span class="reveal-line">Not fully human.</span>
-      <span class="reveal-line reveal-accent">Something else entirely.</span>
-    </h1>
-    <p class="hero-sub" id="reveal-sub">An ancient species awakens. Evolution is not a destination — it is a reckoning.</p>
-    <div class="hero-actions" id="reveal-actions">
+    <img src="primals-logo.jpg" alt="PRIMALS" class="hero-logo" />
+    <p class="hero-eyebrow">A new NFT collection. Coming soon.</p>
+    <h1 class="hero-headline">Not fully apes.<br>Not fully human.<br><span>Something else entirely.</span></h1>
+    <p class="hero-sub">An ancient species awakens. Evolution is not a destination — it is a reckoning.</p>
+    <div class="hero-actions">
       <a href="https://discord.gg/ZRrWFfRVez" target="_blank" class="btn-solid">Join Discord</a>
       <a href="https://x.com/primalsnftx" target="_blank" class="btn-outline">Follow on X</a>
      <a href="https://www.primalsnft.xyz/primaldash" target="_blank" class="btn-solid">Play Primal Dash</a>
@@ -2129,8 +1920,6 @@
 </div><!-- /#site-content -->
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/gsap.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/gsap/3.12.5/ScrollTrigger.min.js"></script>
-<script src="https://unpkg.com/three@0.128.0/build/three.min.js"></script>
 <script>
 /* ════════════════════════════════════════════════════════════
    CINEMATIC LOADING SCREEN
@@ -2154,10 +1943,10 @@
     'Synchronizing the Jungle...',
     'Entering the Realm...'
   ];
-  const MESSAGE_DURATION = 1.0;   // seconds each message is fully visible
-  const MESSAGE_TRANSITION = 0.35; // seconds fade/slide between messages
-  const MIN_DURATION_MS = (MESSAGES.length * (MESSAGE_DURATION + MESSAGE_TRANSITION) + 1.1) * 1000;
-  const MAX_WAIT_MS = 9000; // absolute safety cap even if assets stall
+  const MESSAGE_DURATION = 0.5;    // seconds each message is fully visible
+  const MESSAGE_TRANSITION = 0.22; // seconds fade/slide between messages
+  const MIN_DURATION_MS = (MESSAGES.length * (MESSAGE_DURATION + MESSAGE_TRANSITION) + 0.6) * 1000;
+  const MAX_WAIT_MS = 6000; // absolute safety cap even if assets stall
 
   const elFog1 = document.getElementById('loader-fog-1');
   const elFog2 = document.getElementById('loader-fog-2');
@@ -2452,394 +2241,6 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   });
 
   applyPositions();
-})();
-</script>
-
-<script>
-/* ════════════════════════════════════════════════════════════
-   CINEMATIC HERO — THE NAKED PRIMAL
-   Three.js scene: character cutout (rim glow + eye glow),
-   ember/dust/light-ray atmosphere, mouse parallax, idle
-   breathing/sway, and a GSAP ScrollTrigger transition that
-   dissolves this section into the Act 2 headline reveal.
-
-   Config — asset paths, eye positions, timings — lives at the
-   top of each function for easy tuning. Falls back to a static
-   framed image if WebGL/Three.js is unavailable, and to a fully
-   static, unanimated version under prefers-reduced-motion.
-   ════════════════════════════════════════════════════════════ */
-(function () {
-  const section = document.getElementById('hero-cinematic');
-  const canvas = document.getElementById('primal-canvas');
-  if (!section) return;
-
-  const hasGSAP = typeof window.gsap !== 'undefined';
-  const hasScrollTrigger = hasGSAP && typeof window.ScrollTrigger !== 'undefined';
-  const hasThree = typeof window.THREE !== 'undefined';
-  const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-  const isMobile = window.matchMedia('(max-width: 720px)').matches ||
-                    window.matchMedia('(pointer: coarse)').matches;
-
-  if (hasGSAP && hasScrollTrigger) gsap.registerPlugin(ScrollTrigger);
-
-  // ---- Shared: Act 2 headline stagger reveal (works in every mode) ----
-  function setupRevealTrigger(instant) {
-    const lines = document.querySelectorAll('#reveal-headline .reveal-line');
-    const sub = document.getElementById('reveal-sub');
-    const actions = document.getElementById('reveal-actions');
-
-    if (instant || !hasGSAP) {
-      lines.forEach(el => el.classList.add('no-anim'));
-      if (sub) sub.classList.add('no-anim');
-      if (actions) actions.classList.add('no-anim');
-      return;
-    }
-
-    if (hasScrollTrigger) {
-      ScrollTrigger.create({
-        trigger: '#hero-reveal',
-        start: 'top 75%',
-        once: true,
-        onEnter: () => {
-          const tl = gsap.timeline();
-          tl.to(lines, { opacity: 1, y: 0, duration: 0.8, ease: 'power2.out', stagger: 0.25 })
-            .to(sub, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.25')
-            .to(actions, { opacity: 1, y: 0, duration: 0.7, ease: 'power2.out' }, '-=0.35');
-        }
-      });
-    } else {
-      lines.forEach(el => el.classList.add('no-anim'));
-      if (sub) sub.classList.add('no-anim');
-      if (actions) actions.classList.add('no-anim');
-    }
-  }
-
-  // ---- Reduced motion: fully static, no WebGL, no particles -----------
-  if (prefersReducedMotion) {
-    section.classList.add('no-webgl');
-    gsap && gsap.set ? gsap.set('.hero-cine-ui, .hero-cine-scroll, .hero-cine-fallback-img', { opacity: 1 })
-                     : null;
-    document.querySelectorAll('.hero-cine-ui, .hero-cine-scroll, .hero-cine-fallback-img')
-      .forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
-    setupRevealTrigger(true);
-    return;
-  }
-
-  // ---- Fade in the Act 1 UI (logo, tagline, buttons, scroll cue) ------
-  function revealUI() {
-    if (!hasGSAP) {
-      document.querySelectorAll('.hero-cine-ui, .hero-cine-scroll')
-        .forEach(el => { el.style.opacity = '1'; el.style.transform = 'none'; });
-      return;
-    }
-    const tl = gsap.timeline({ delay: 0.3 });
-    tl.to('#hero-cine-logo', { opacity: 1, y: 0, duration: 1, ease: 'power2.out' })
-      .to('#hero-cine-tagline', { opacity: 1, y: 0, duration: 0.9, ease: 'power2.out' }, '-=0.6')
-      .to('#hero-cine-actions', { opacity: 1, duration: 0.8, ease: 'power2.out' }, '-=0.4')
-      .to('#hero-cine-scroll', { opacity: 1, duration: 0.8, ease: 'power2.out' }, '-=0.3');
-  }
-
-  // ---- No WebGL / no Three.js: static framed image fallback ------------
-  function initFallbackMode() {
-    section.classList.add('no-webgl');
-    revealUI();
-    if (hasScrollTrigger) {
-      gsap.to('#primal-fallback-img, .hero-cine-ui, .hero-cine-scroll', {
-        opacity: 0, ease: 'none',
-        scrollTrigger: { trigger: '#hero-cinematic', start: 'top top', end: 'bottom top', scrub: 0.6 }
-      });
-      gsap.to('#hero-cine-blackout', {
-        opacity: 1, ease: 'none',
-        scrollTrigger: { trigger: '#hero-cinematic', start: 'top top', end: 'bottom top', scrub: 0.6 }
-      });
-    }
-    setupRevealTrigger(false);
-  }
-
-  if (!hasThree || !canvas) { initFallbackMode(); return; }
-
-  let gl;
-  try { gl = canvas.getContext('webgl') || canvas.getContext('experimental-webgl'); }
-  catch (e) { gl = null; }
-  if (!gl) { initFallbackMode(); return; }
-
-  // ---- Full cinematic Three.js scene ------------------------------------
-  const TEXTURE_SRC = 'naked-primal-hero.webp';
-  const TEXTURE_FALLBACK_SRC = 'naked-primal-hero.png';
-  const EYE_L_UV = { x: 0.671, y: 0.726 }; // measured from source pixels, fraction of plane, origin bottom-left
-  const EYE_R_UV = { x: 0.824, y: 0.727 };
-  const RED = 0xE01A10;
-  const CHAR_FRACTION = 0.68; // character occupies ~68% of viewport height
-
-  const renderer = new THREE.WebGLRenderer({ canvas, alpha: true, antialias: true, powerPreference: 'high-performance' });
-  renderer.setPixelRatio(Math.min(window.devicePixelRatio || 1, isMobile ? 1.5 : 2));
-
-  const scene = new THREE.Scene();
-  const camera = new THREE.PerspectiveCamera(35, 1, 0.1, 100);
-  camera.position.set(0, 0, 8);
-  camera.lookAt(0, 0, 0);
-
-  function resize() {
-    const w = section.clientWidth, h = section.clientHeight;
-    renderer.setSize(w, h, false);
-    camera.aspect = w / h;
-    camera.updateProjectionMatrix();
-  }
-  resize();
-  window.addEventListener('resize', resize);
-
-  const group = new THREE.Group();
-  scene.add(group);
-
-  let charMesh, glowMesh, eyeGlowL, eyeGlowR;
-  let idleActive = true;
-  const idleTweens = [];
-  const rot = { idleX: 0, idleY: 0, idleZ: 0 };
-  const mouseRot = { x: 0, y: 0 };
-  const mouse = { x: 0, y: 0 };
-
-  function buildEyeGlowTexture() {
-    const c = document.createElement('canvas');
-    c.width = c.height = 128;
-    const ctx = c.getContext('2d');
-    const g = ctx.createRadialGradient(64, 64, 0, 64, 64, 64);
-    g.addColorStop(0, 'rgba(255,90,60,0.95)');
-    g.addColorStop(0.4, 'rgba(224,26,16,0.55)');
-    g.addColorStop(1, 'rgba(224,26,16,0)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 128, 128);
-    return new THREE.CanvasTexture(c);
-  }
-
-  function positionEye(sprite, uv, planeW, planeH) {
-    sprite.position.set((uv.x - 0.5) * planeW, (uv.y - 0.5) * planeH, 0.06);
-  }
-
-  function visibleHeightAt(distance) {
-    const vFOV = THREE.MathUtils.degToRad(camera.fov);
-    return 2 * Math.tan(vFOV / 2) * distance;
-  }
-
-  function onTextureLoaded(tex) {
-    if (tex.encoding !== undefined) tex.encoding = THREE.sRGBEncoding;
-    tex.minFilter = THREE.LinearFilter;
-
-    const aspect = tex.image.width / tex.image.height;
-    const planeH = visibleHeightAt(camera.position.z) * CHAR_FRACTION;
-    const planeW = planeH * aspect;
-
-    // Rim-glow duplicate: same silhouette, tinted red, additive, sitting just behind
-    const glowMat = new THREE.MeshBasicMaterial({
-      map: tex, color: RED, transparent: true, opacity: 0.5,
-      blending: THREE.AdditiveBlending, depthWrite: false
-    });
-    glowMesh = new THREE.Mesh(new THREE.PlaneGeometry(planeW * 1.045, planeH * 1.045), glowMat);
-    glowMesh.position.z = -0.2;
-    group.add(glowMesh);
-
-    // Main character cutout
-    const charMat = new THREE.MeshBasicMaterial({ map: tex, transparent: true, depthWrite: false });
-    charMesh = new THREE.Mesh(new THREE.PlaneGeometry(planeW, planeH), charMat);
-    group.add(charMesh);
-
-    // Eye glow sprites (approximate positions on the cutout)
-    const eyeTex = buildEyeGlowTexture();
-    eyeGlowL = new THREE.Sprite(new THREE.SpriteMaterial({ map: eyeTex, color: RED, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.85 }));
-    eyeGlowR = new THREE.Sprite(new THREE.SpriteMaterial({ map: eyeTex, color: RED, transparent: true, blending: THREE.AdditiveBlending, depthWrite: false, opacity: 0.85 }));
-    const eyeSize = planeH * 0.09;
-    eyeGlowL.scale.set(eyeSize, eyeSize, 1);
-    eyeGlowR.scale.set(eyeSize, eyeSize, 1);
-    positionEye(eyeGlowL, EYE_L_UV, planeW, planeH);
-    positionEye(eyeGlowR, EYE_R_UV, planeW, planeH);
-    group.add(eyeGlowL, eyeGlowR);
-
-    // Slight heroic framing: bias the character a touch downward in frame
-    group.position.y = -planeH * 0.04;
-
-    revealUI();
-    startIdleAnimation();
-    initScrollTransition();
-  }
-
-  const texLoader = new THREE.TextureLoader();
-  texLoader.load(TEXTURE_SRC, onTextureLoaded, undefined, function () {
-    texLoader.load(TEXTURE_FALLBACK_SRC, onTextureLoaded, undefined, function () {
-      initFallbackMode();
-    });
-  });
-
-  // ---- Atmosphere: embers, dust, light rays -----------------------------
-  function makeGlowSpriteTexture(color) {
-    const c = document.createElement('canvas');
-    c.width = c.height = 64;
-    const ctx = c.getContext('2d');
-    const g = ctx.createRadialGradient(32, 32, 0, 32, 32, 32);
-    g.addColorStop(0, color);
-    g.addColorStop(1, 'rgba(0,0,0,0)');
-    ctx.fillStyle = g;
-    ctx.fillRect(0, 0, 64, 64);
-    return new THREE.CanvasTexture(c);
-  }
-
-  function buildParticleField(tex, count, opts) {
-    const positions = new Float32Array(count * 3);
-    const speeds = new Float32Array(count);
-    const phases = new Float32Array(count);
-    for (let i = 0; i < count; i++) {
-      positions[i * 3 + 0] = (Math.random() - 0.5) * opts.spreadX;
-      positions[i * 3 + 1] = (Math.random() - 0.5) * opts.spreadY;
-      positions[i * 3 + 2] = (Math.random() - 0.5) * 3 - 1;
-      speeds[i] = opts.minSpeed + Math.random() * (opts.maxSpeed - opts.minSpeed);
-      phases[i] = Math.random() * Math.PI * 2;
-    }
-    const geo = new THREE.BufferGeometry();
-    geo.setAttribute('position', new THREE.BufferAttribute(positions, 3));
-    const mat = new THREE.PointsMaterial({
-      map: tex, size: opts.size, transparent: true, opacity: opts.opacity,
-      blending: THREE.AdditiveBlending, depthWrite: false, sizeAttenuation: true
-    });
-    const points = new THREE.Points(geo, mat);
-    points.userData = { speeds, phases, spreadY: opts.spreadY, riseMul: opts.riseMul || 1 };
-    scene.add(points);
-    return points;
-  }
-
-  const emberTex = makeGlowSpriteTexture('rgba(224,26,16,0.9)');
-  const dustTex = makeGlowSpriteTexture('rgba(240,232,232,0.55)');
-  const emberCount = isMobile ? 16 : 42;
-  const dustCount = isMobile ? 18 : 46;
-
-  const embers = buildParticleField(emberTex, emberCount, { spreadX: 9, spreadY: 7, size: 0.09, opacity: 0.8, minSpeed: 0.15, maxSpeed: 0.42, riseMul: 1 });
-  const dust = buildParticleField(dustTex, dustCount, { spreadX: 10, spreadY: 7, size: 0.045, opacity: 0.32, minSpeed: 0.02, maxSpeed: 0.07, riseMul: 0.4 });
-
-  function updateParticles(points, dt, t) {
-    const posAttr = points.geometry.attributes.position;
-    const { speeds, phases, spreadY, riseMul } = points.userData;
-    for (let i = 0; i < speeds.length; i++) {
-      let y = posAttr.getY(i) + speeds[i] * dt * riseMul;
-      let x = posAttr.getX(i) + Math.sin(t * 0.5 + phases[i]) * 0.0025;
-      if (y > spreadY / 2) y = -spreadY / 2;
-      posAttr.setY(i, y);
-      posAttr.setX(i, x);
-    }
-    posAttr.needsUpdate = true;
-  }
-
-  // Soft rotating light-ray plane, tucked behind the character
-  function makeRayTexture() {
-    const c = document.createElement('canvas');
-    c.width = c.height = 512;
-    const ctx = c.getContext('2d');
-    for (let i = 0; i < 6; i++) {
-      const ang = (i / 6) * Math.PI * 2;
-      const grad = ctx.createLinearGradient(256, 256, 256 + Math.cos(ang) * 256, 256 + Math.sin(ang) * 256);
-      grad.addColorStop(0, 'rgba(224,26,16,0.10)');
-      grad.addColorStop(1, 'rgba(224,26,16,0)');
-      ctx.strokeStyle = grad;
-      ctx.lineWidth = 40;
-      ctx.beginPath();
-      ctx.moveTo(256, 256);
-      ctx.lineTo(256 + Math.cos(ang) * 256, 256 + Math.sin(ang) * 256);
-      ctx.stroke();
-    }
-    return new THREE.CanvasTexture(c);
-  }
-  const rayMat = new THREE.MeshBasicMaterial({ map: makeRayTexture(), transparent: true, opacity: 0.25, blending: THREE.AdditiveBlending, depthWrite: false });
-  const rayMesh = new THREE.Mesh(new THREE.PlaneGeometry(20, 20), rayMat);
-  rayMesh.position.z = -4;
-  scene.add(rayMesh);
-
-  // ---- Mouse parallax (desktop only) ------------------------------------
-  if (!isMobile) {
-    window.addEventListener('mousemove', (e) => {
-      const rect = section.getBoundingClientRect();
-      mouse.x = ((e.clientX - rect.left) / rect.width) * 2 - 1;
-      mouse.y = ((e.clientY - rect.top) / rect.height) * 2 - 1;
-    });
-  }
-
-  // ---- Idle animation: breathing, sway, micro-adjustments, eye pulse ----
-  function startIdleAnimation() {
-    if (!hasGSAP) return;
-
-    idleTweens.push(gsap.to(group.scale, { x: 1.016, y: 1.022, duration: 3.4, ease: 'sine.inOut', repeat: -1, yoyo: true }));
-    idleTweens.push(gsap.to(group.position, { y: '+=0.055', duration: 4.2, ease: 'sine.inOut', repeat: -1, yoyo: true }));
-    idleTweens.push(gsap.to(rot, { idleZ: 0.012, duration: 5.5, ease: 'sine.inOut', repeat: -1, yoyo: true }));
-    idleTweens.push(gsap.to(camera.position, { z: 7.85, duration: 6, ease: 'sine.inOut', repeat: -1, yoyo: true }));
-
-    function microAdjust() {
-      if (!idleActive) return;
-      gsap.to(rot, {
-        idleY: (Math.random() - 0.5) * 0.028,
-        duration: 1.8, ease: 'sine.inOut',
-        onComplete: () => { if (idleActive) gsap.delayedCall(gsap.utils.random(3, 6), microAdjust); }
-      });
-    }
-    gsap.delayedCall(gsap.utils.random(2, 4), microAdjust);
-
-    function eyePulse() {
-      if (!idleActive) return;
-      const tl = gsap.timeline({ onComplete: () => { if (idleActive) gsap.delayedCall(gsap.utils.random(3.5, 6), eyePulse); } });
-      tl.to([eyeGlowL.material, eyeGlowR.material], { opacity: 0.12, duration: 0.1, ease: 'power1.in' })
-        .to([eyeGlowL.material, eyeGlowR.material], { opacity: 0.85, duration: 0.4, ease: 'power2.out' })
-        .to([eyeGlowL.scale, eyeGlowR.scale], { x: '+=0.12', y: '+=0.12', duration: 1.1, ease: 'sine.inOut', yoyo: true, repeat: 1 }, '<');
-    }
-    gsap.delayedCall(gsap.utils.random(2, 4), eyePulse);
-  }
-
-  // ---- Scroll-driven transition into Act 2 ------------------------------
-  function initScrollTransition() {
-    if (!hasScrollTrigger) return;
-    const blackout = document.getElementById('hero-cine-blackout');
-
-    ScrollTrigger.create({
-      trigger: '#hero-cinematic',
-      start: 'top top',
-      end: '+=90%',
-      onEnter: () => { idleActive = false; idleTweens.forEach(t => t.pause()); },
-      onLeaveBack: () => { idleActive = true; idleTweens.forEach(t => t.resume()); }
-    });
-
-    gsap.timeline({
-      scrollTrigger: { trigger: '#hero-cinematic', start: 'top top', end: '+=90%', scrub: 0.6, pin: true }
-    })
-      .to(camera.position, { z: 4.4, ease: 'none', duration: 1 }, 0)
-      .to('.hero-cine-ui, .hero-cine-scroll', { opacity: 0, duration: 0.3, ease: 'none' }, 0)
-      .to(rayMat, { opacity: 0.45, duration: 1 }, 0)
-      .to(embers.material, { opacity: 1, duration: 0.6 }, 0.15)
-      .to(dust.material, { opacity: 0.1, duration: 0.6 }, 0.15)
-      .to(blackout, { opacity: 1, duration: 0.6, ease: 'none' }, 0.4)
-      .to(charMesh.material, { opacity: 0, duration: 0.6, ease: 'none' }, 0.35)
-      .to(glowMesh.material, { opacity: 0, duration: 0.6, ease: 'none' }, 0.35)
-      .to([eyeGlowL.material, eyeGlowR.material], { opacity: 0, duration: 0.5, ease: 'none' }, 0.4);
-  }
-
-  // ---- Render loop -------------------------------------------------------
-  const clock = new THREE.Clock();
-  function animate() {
-    requestAnimationFrame(animate);
-    const dt = Math.min(clock.getDelta(), 0.1);
-    const t = clock.getElapsedTime();
-
-    const targetX = mouse.y * THREE.MathUtils.degToRad(6);
-    const targetY = mouse.x * THREE.MathUtils.degToRad(7);
-    mouseRot.x += (targetX - mouseRot.x) * 0.045;
-    mouseRot.y += (targetY - mouseRot.y) * 0.045;
-
-    group.rotation.set(rot.idleX + mouseRot.x, rot.idleY + mouseRot.y, rot.idleZ);
-
-    camera.position.x += (mouse.x * 0.3 - camera.position.x) * 0.03;
-    camera.lookAt(0, 0, 0);
-
-    updateParticles(embers, dt, t);
-    updateParticles(dust, dt, t);
-    rayMesh.rotation.z += 0.0006;
-
-    renderer.render(scene, camera);
-  }
-  animate();
-
-  setupRevealTrigger(false);
 })();
 </script>
 
