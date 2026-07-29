@@ -2760,11 +2760,14 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
   if (canHover) {
     viewport.addEventListener('mouseenter', () => setPause('hover', true));
     viewport.addEventListener('mouseleave', () => setPause('hover', false));
-  }
 
-  // Pause on keyboard focus too, so keyboard users aren't fighting the motion
-  track.addEventListener('focusin', () => setPause('focus', true));
-  track.addEventListener('focusout', () => setPause('focus', false));
+    // Pause on keyboard focus too, so keyboard users aren't fighting the motion.
+    // Gated to hover-capable devices only: on touch, tapping a card focuses it,
+    // and returning focus to that same card after closing the lightbox would
+    // re-trigger this and leave the carousel stuck paused.
+    track.addEventListener('focusin', () => setPause('focus', true));
+    track.addEventListener('focusout', () => setPause('focus', false));
+  }
 
   // Lightbox
   const lightbox = document.getElementById('submission-lightbox');
