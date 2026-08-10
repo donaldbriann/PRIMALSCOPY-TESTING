@@ -1003,7 +1003,7 @@
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: grayscale(35%) brightness(0.62);
+    filter: grayscale(10%) brightness(0.88);
     transition: filter 0.45s ease, transform 0.6s ease;
     pointer-events: none;
     -webkit-user-drag: none;
@@ -1045,7 +1045,7 @@
     box-shadow: 0 28px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(192,17,10,0.25);
   }
   .carousel-card.popped .carousel-img {
-    filter: grayscale(0%) brightness(0.92);
+    filter: grayscale(0%) brightness(1);
     transform: scale(1.04);
   }
   .carousel-card.popped .carousel-info {
@@ -1053,7 +1053,7 @@
   }
 
   @media (max-width: 720px) {
-    .carousel-card { width: 198px; height: 260px; }
+    .carousel-card { width: 165px; height: 220px; }
     .carousel-card.popped { transform: scale(1.35) translateY(-10px); }
     .carousel-name { font-size: 0.88rem; }
     .carousel-lore { font-size: 0.72rem; }
@@ -1296,17 +1296,160 @@
     margin-top: 2.5rem;
   }
 
-  .contest-deadline {
+  /* COUNTDOWN — primal-styled, glowing ember timer */
+  .countdown {
+    position: relative;
     display: inline-flex;
+    flex-direction: column;
     align-items: center;
-    gap: 0.4rem;
-    background: rgba(192,17,10,0.08);
-    border: 1px solid var(--border);
-    color: var(--red-bright);
-    font-size: 0.72rem;
-    letter-spacing: 0.15em;
+    gap: 0.9rem;
+    padding: 1.85rem 2.75rem;
+    background: linear-gradient(165deg, rgba(24,10,10,0.92) 0%, rgba(5,4,4,0.97) 100%);
+    border: 1px solid var(--red);
+    overflow: hidden;
+    isolation: isolate;
+  }
+
+  .countdown::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    opacity: 0.07;
+    background-image: repeating-linear-gradient(
+      -55deg, transparent, transparent 3px,
+      rgba(192,17,10,0.9) 3px, rgba(192,17,10,0.9) 4px
+    );
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  .countdown::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border: 1px solid transparent;
+    background:
+      linear-gradient(90deg, var(--red-bright), transparent 30%, transparent 70%, var(--red-bright)) border-box;
+    -webkit-mask: linear-gradient(#fff 0 0) padding-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0.55;
+    pointer-events: none;
+  }
+
+  .countdown-glow {
+    position: absolute;
+    inset: -45%;
+    background: radial-gradient(ellipse at center, rgba(224,26,16,0.28), transparent 70%);
+    filter: blur(22px);
+    animation: countdown-pulse 2.4s ease-in-out infinite;
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes countdown-pulse {
+    0%, 100% { opacity: 0.5; transform: scale(1); }
+    50% { opacity: 0.95; transform: scale(1.1); }
+  }
+
+  .countdown-corner {
+    position: absolute;
+    width: 16px; height: 16px;
+    border-color: var(--red-bright);
+    opacity: 0.75;
+    z-index: 1;
+    pointer-events: none;
+  }
+  .countdown-corner.tl { top: 8px; left: 8px; border-top: 1px solid; border-left: 1px solid; }
+  .countdown-corner.tr { top: 8px; right: 8px; border-top: 1px solid; border-right: 1px solid; }
+  .countdown-corner.bl { bottom: 8px; left: 8px; border-bottom: 1px solid; border-left: 1px solid; }
+  .countdown-corner.br { bottom: 8px; right: 8px; border-bottom: 1px solid; border-right: 1px solid; }
+
+  .countdown-label {
+    position: relative;
+    font-size: 0.68rem;
+    letter-spacing: 0.32em;
     text-transform: uppercase;
-    padding: 0.5rem 1rem;
+    color: var(--red-bright);
+    z-index: 1;
+  }
+
+  .countdown-units {
+    position: relative;
+    display: flex;
+    align-items: flex-start;
+    gap: 0.7rem;
+    z-index: 1;
+  }
+
+  .countdown-unit {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    min-width: 56px;
+  }
+
+  .countdown-value {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 2.3rem;
+    color: #fff;
+    text-shadow: 0 0 20px rgba(224,26,16,0.9), 0 0 6px rgba(224,26,16,0.9);
+    font-variant-numeric: tabular-nums;
+    line-height: 1;
+  }
+
+  .countdown-unit-label {
+    margin-top: 0.4rem;
+    font-size: 0.6rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--text-muted);
+  }
+
+  .countdown-sep {
+    font-family: 'Cinzel', serif;
+    font-weight: 900;
+    font-size: 1.9rem;
+    color: var(--red-bright);
+    margin-top: 0.15rem;
+    animation: countdown-blink 1s steps(1) infinite;
+  }
+
+  @keyframes countdown-blink {
+    0%, 49% { opacity: 0.7; }
+    50%, 100% { opacity: 0.15; }
+  }
+
+  .countdown.ended {
+    padding: 1.75rem 2.25rem;
+  }
+
+  .countdown-ended-text {
+    position: relative;
+    z-index: 1;
+    font-family: 'Cinzel', serif;
+    font-size: 1.05rem;
+    font-weight: 700;
+    color: var(--red-bright);
+    text-align: center;
+    letter-spacing: 0.02em;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 720px) {
+    .countdown { padding: 1.4rem 1.4rem; gap: 0.7rem; }
+    .countdown-value { font-size: 1.55rem; }
+    .countdown-unit { min-width: 42px; }
+    .countdown-unit-label { font-size: 0.54rem; }
+    .countdown-sep { font-size: 1.3rem; margin-top: 0.05rem; }
+    .countdown-label { font-size: 0.6rem; letter-spacing: 0.26em; }
+    .countdown-ended-text { font-size: 0.92rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .countdown-glow { animation: none; opacity: 0.6; }
+    .countdown-sep { animation: none; opacity: 0.8; }
   }
 
   @media (max-width: 720px) {
@@ -1678,7 +1821,23 @@
     </div>
 
     <div class="contest-footer fade-in">
-      <span class="contest-deadline">Deadline · Aug 15, 5PM UTC</span>
+      <div class="countdown" id="countdown" aria-live="polite">
+        <div class="countdown-glow"></div>
+        <div class="countdown-corner tl"></div>
+        <div class="countdown-corner tr"></div>
+        <div class="countdown-corner bl"></div>
+        <div class="countdown-corner br"></div>
+        <p class="countdown-label">Submissions close in</p>
+        <div class="countdown-units">
+          <div class="countdown-unit"><span class="countdown-value" id="cd-days">00</span><span class="countdown-unit-label">Days</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-unit"><span class="countdown-value" id="cd-hours">00</span><span class="countdown-unit-label">Hrs</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-unit"><span class="countdown-value" id="cd-mins">00</span><span class="countdown-unit-label">Min</span></div>
+          <span class="countdown-sep">:</span>
+          <div class="countdown-unit"><span class="countdown-value" id="cd-secs">00</span><span class="countdown-unit-label">Sec</span></div>
+        </div>
+      </div>
     </div>
   </div>
 </section>
@@ -2049,6 +2208,54 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
       clearPop();
     }
   });
+})();
+
+// Art contest countdown — live, no daily updates needed
+(function() {
+  const el = document.getElementById('countdown');
+  if (!el) return;
+
+  // Fixed target: Aug 15, 2026, 5:00 PM UTC
+  const TARGET = Date.UTC(2026, 7, 15, 17, 0, 0);
+
+  const dEl = document.getElementById('cd-days');
+  const hEl = document.getElementById('cd-hours');
+  const mEl = document.getElementById('cd-mins');
+  const sEl = document.getElementById('cd-secs');
+  let timer = null;
+
+  function pad(n) { return String(n).padStart(2, '0'); }
+
+  function render() {
+    const diff = TARGET - Date.now();
+
+    if (diff <= 0) {
+      if (timer) clearInterval(timer);
+      el.classList.add('ended');
+      el.innerHTML = `
+        <div class="countdown-glow"></div>
+        <div class="countdown-corner tl"></div>
+        <div class="countdown-corner tr"></div>
+        <div class="countdown-corner bl"></div>
+        <div class="countdown-corner br"></div>
+        <p class="countdown-ended-text">Art contest ended.<br>Thanks for your participation.</p>
+      `;
+      return;
+    }
+
+    const days = Math.floor(diff / 86400000);
+    const hours = Math.floor((diff % 86400000) / 3600000);
+    const mins = Math.floor((diff % 3600000) / 60000);
+    const secs = Math.floor((diff % 60000) / 1000);
+
+    dEl.textContent = pad(days);
+    hEl.textContent = pad(hours);
+    mEl.textContent = pad(mins);
+    sEl.textContent = pad(secs);
+  }
+
+  render();
+  timer = setInterval(render, 1000);
 })();
 </script>
 
