@@ -401,7 +401,7 @@
       const nice = matched.join(', ').replace(/, ([^,]*)$/, ' & $1');
       showMultiPhaseMsg(
         matched.map(p => p + ' PHASE'),
-        "This wallet qualifies for multiple phases. You're eligible to mint in the " + nice + " phases. You can mint during any of them.",
+        "You're eligible to mint in the " + nice + " phases.",
         'success'
       );
     }
