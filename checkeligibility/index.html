@@ -231,6 +231,24 @@
     margin-bottom: 0.3rem;
   }
 
+  .phase-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.4rem;
+    margin-bottom: 0.4rem;
+  }
+
+  .phase-chip {
+    display: inline-block;
+    font-family: 'Bebas Neue', sans-serif;
+    letter-spacing: 0.08em;
+    font-size: 0.9rem;
+    padding: 0.2rem 0.7rem;
+    border: 1px solid rgba(63,191,106,0.5);
+    background: rgba(63,191,106,0.1);
+    color: #C9F5D8;
+  }
+
   footer {
     position: relative;
     z-index: 2;
@@ -331,6 +349,12 @@
     msg.innerHTML = '<span class="phase-tag">' + label + '</span><br>' + text;
   }
 
+  function showMultiPhaseMsg(labels, text, type) {
+    const chips = labels.map(l => '<span class="phase-chip">' + l + '</span>').join('');
+    msg.className = 'msg show ' + type;
+    msg.innerHTML = '<div class="phase-tags">' + chips + '</div>' + text;
+  }
+
   function isSolanaAddress(addr) {
     return SOLANA_RE.test(addr);
   }
@@ -363,14 +387,23 @@
       return;
     }
 
-    if (lists.OG.has(addr)) {
-      showPhaseMsg('OG PHASE', "You're eligible to mint in the OG phase.", 'success');
-    } else if (lists.WL.has(addr)) {
-      showPhaseMsg('WL PHASE', "You're eligible to mint in the WL phase.", 'success');
-    } else if (lists.WL2.has(addr)) {
-      showPhaseMsg('WL2 PHASE', "You're eligible to mint in the WL2 phase.", 'success');
-    } else {
+    const matched = [];
+    if (lists.OG.has(addr)) matched.push('OG');
+    if (lists.WL.has(addr)) matched.push('WL');
+    if (lists.WL2.has(addr)) matched.push('WL2');
+
+    if (matched.length === 0) {
       showPhaseMsg('PUBLIC PHASE', "This wallet isn't on an allowlist — you'll be able to mint during the Public phase.", 'neutral');
+    } else if (matched.length === 1) {
+      const phase = matched[0];
+      showPhaseMsg(phase + ' PHASE', "You're eligible to mint in the " + phase + " phase.", 'success');
+    } else {
+      const nice = matched.join(', ').replace(/, ([^,]*)$/, ' & $1');
+      showMultiPhaseMsg(
+        matched.map(p => p + ' PHASE'),
+        "This wallet qualifies for multiple phases — you're eligible to mint in the " + nice + " phases. You can mint during any of them.",
+        'success'
+      );
     }
   }
 
