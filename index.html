@@ -142,6 +142,26 @@
   }
   .btn-solid:hover { background: var(--red-bright); }
 
+  /* Glowing CTA — used for Check Eligibility */
+  .btn-glow {
+    position: relative;
+    background: var(--red-bright);
+    border-color: var(--red-bright);
+    box-shadow: 0 0 12px rgba(224,26,16,0.55), 0 0 28px rgba(224,26,16,0.3);
+    animation: glow-pulse 2.2s ease-in-out infinite;
+  }
+  .btn-glow:hover {
+    background: var(--red-bright);
+    box-shadow: 0 0 18px rgba(224,26,16,0.8), 0 0 42px rgba(224,26,16,0.5);
+  }
+  @keyframes glow-pulse {
+    0%, 100% { box-shadow: 0 0 12px rgba(224,26,16,0.55), 0 0 28px rgba(224,26,16,0.3); }
+    50% { box-shadow: 0 0 20px rgba(224,26,16,0.85), 0 0 46px rgba(224,26,16,0.55); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .btn-glow { animation: none; }
+  }
+
   /* Mobile icon-only nav buttons — hidden on desktop */
   .nav-icon-btn {
     display: none;
@@ -1016,7 +1036,7 @@
     flex-direction: column;
     justify-content: flex-end;
     padding: 1rem;
-    background: linear-gradient(to top, rgba(5,4,4,0.97) 12%, rgba(5,4,4,0.35) 60%, transparent 100%);
+    background: linear-gradient(to top, rgba(5,4,4,0.98) 0%, rgba(5,4,4,0.92) 30%, rgba(5,4,4,0.55) 58%, transparent 100%);
     opacity: 0;
     transition: opacity 0.4s ease;
     pointer-events: none;
@@ -1029,12 +1049,14 @@
     color: var(--text);
     letter-spacing: 0.04em;
     margin-bottom: 0.4rem;
+    text-shadow: 0 2px 8px rgba(0,0,0,0.9);
   }
 
   .carousel-lore {
     font-size: 0.76rem;
-    color: var(--text-muted);
+    color: #C9B8B8;
     line-height: 1.55;
+    text-shadow: 0 1px 6px rgba(0,0,0,0.9);
   }
 
   /* popped state — desktop hover / mobile tap */
@@ -1045,7 +1067,7 @@
     box-shadow: 0 28px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(192,17,10,0.25);
   }
   .carousel-card.popped .carousel-img {
-    filter: grayscale(0%) brightness(1);
+    filter: grayscale(0%) brightness(0.8);
     transform: scale(1.04);
   }
   .carousel-card.popped .carousel-info {
@@ -1759,7 +1781,8 @@
     <h1 class="hero-headline">Not fully apes.<br>Not fully human.<br><span>Something else entirely.</span></h1>
     <p class="hero-sub">An ancient species awakens. Evolution is not a destination, it is a reckoning.</p>
     <div class="hero-actions">
-      <a href="https://discord.gg/ZRrWFfRVez" target="_blank" class="btn-solid">Join Discord</a>
+      <a href="https://primalsnft.xyz/checkeligibility" class="btn-solid btn-glow">Check Eligibility</a>
+      <a href="https://discord.gg/ZRrWFfRVez" target="_blank" class="btn-outline">Join Discord</a>
       <a href="https://x.com/primalsnftx" target="_blank" class="btn-outline">Follow on X</a>
      <a href="https://www.primalsnft.xyz/primaldash" target="_blank" class="btn-solid">Play Primal Dash</a>
     </div>
