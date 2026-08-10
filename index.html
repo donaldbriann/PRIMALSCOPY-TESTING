@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>PRIMALS NFT — The Next Stage of Evolution</title>
+<title>PRIMALS NFT • The Next Stage of Evolution</title>
 
 <!-- Favicon -->
 <link rel="icon" type="image/png" href="primals-favicon.png">
@@ -11,28 +11,28 @@
 <link rel="apple-touch-icon" href="primals-favicon.png">
 
 <!-- Primary Meta --> 
-<meta name="description" content="An ancient species awakens. Evolution is not a destination — it is a reckoning.">
+<meta name="description" content="An ancient species awakens. Evolution is not a destination, it is a reckoning.">
 
 <!-- Open Graph (Discord, WhatsApp, Telegram, Facebook) -->
 <meta property="og:type" content="website">
 <meta property="og:site_name" content="PRIMALS NFT">
 <meta property="og:url" content="https://primalsonsol.github.io/PRIMALS/">
-<meta property="og:title" content="PRIMALS NFT — The Next Stage of Evolution">
-<meta property="og:description" content="An ancient species awakens. Evolution is not a destination — it is a reckoning.">
+<meta property="og:title" content="PRIMALS NFT • The Next Stage of Evolution">
+<meta property="og:description" content="An ancient species awakens. Evolution is not a destination, it is a reckoning.">
 <meta property="og:image" content="https://raw.githubusercontent.com/primalsonsol/PRIMALS/main/IMG_4982.PNG">
 <meta property="og:image:type" content="image/png">
 <meta property="og:image:width" content="1500">
 <meta property="og:image:height" content="750">
-<meta property="og:image:alt" content="PRIMALS NFT — The Next Stage of Evolution">
+<meta property="og:image:alt" content="PRIMALS NFT • The Next Stage of Evolution">
 
 <!-- Twitter / X Card -->
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:site" content="@primalsnftx">
 <meta name="twitter:url" content="https://primalsonsol.github.io/PRIMALS/">
-<meta name="twitter:title" content="PRIMALS NFT — The Next Stage of Evolution">
-<meta name="twitter:description" content="An ancient species awakens. Evolution is not a destination — it is a reckoning.">
+<meta name="twitter:title" content="PRIMALS NFT • The Next Stage of Evolution">
+<meta name="twitter:description" content="An ancient species awakens. Evolution is not a destination, it is a reckoning.">
 <meta name="twitter:image" content="https://raw.githubusercontent.com/primalsonsol/PRIMALS/main/IMG_4982.PNG">
-<meta name="twitter:image:alt" content="PRIMALS NFT — The Next Stage of Evolution">
+<meta name="twitter:image:alt" content="PRIMALS NFT • The Next Stage of Evolution">
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Inter:wght@300;400;500;600&family=Cinzel:wght@700;900&display=swap" rel="stylesheet">
 <style>
@@ -751,7 +751,6 @@
   /* Very small screens */
   @media (max-width: 380px) {
     .hero-headline { font-size: 1.6rem; }
-    .trait-cards { grid-template-columns: 1fr; }
   }
 
   @media (prefers-reduced-motion: reduce) {
@@ -939,123 +938,130 @@
     100% { opacity: 0; transform: scale(0.5); }
   }
 
-  /* SNEAK PEEK GALLERY — stacked cards */
+  /* SNEAK PEEK — infinite auto-scrolling carousel */
   #gallery {
     background: var(--black);
   }
 
-  .stack-wrap {
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    margin-top: 3rem;
-  }
-
-  .card-stack {
+  .carousel-viewport {
     position: relative;
-    width: min(340px, 82vw);
-    height: 440px;
+    width: 100%;
+    overflow-x: hidden;
+    overflow-y: visible;
+    padding: 2.5rem 0;
+    margin-top: 3rem;
+    -webkit-user-select: none;
+    user-select: none;
+    touch-action: pan-y;
+    cursor: grab;
   }
 
-  .stack-card {
+  .carousel-viewport.grabbing { cursor: grabbing; }
+
+  /* soft edge fade so cards don't hard-clip */
+  .carousel-viewport::before,
+  .carousel-viewport::after {
+    content: '';
     position: absolute;
-    inset: 0;
-    overflow: hidden;
+    top: 0; bottom: 0;
+    width: min(10vw, 90px);
+    z-index: 5;
+    pointer-events: none;
+  }
+  .carousel-viewport::before {
+    left: 0;
+    background: linear-gradient(to right, var(--black), transparent);
+  }
+  .carousel-viewport::after {
+    right: 0;
+    background: linear-gradient(to left, var(--black), transparent);
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 1.1rem;
+    width: max-content;
+    will-change: transform;
+  }
+
+  .carousel-card {
+    position: relative;
+    flex: 0 0 auto;
+    width: 240px;
+    height: 310px;
     border: 1px solid var(--border);
     background: var(--surface2);
-    cursor: pointer;
-    box-shadow: 0 14px 34px rgba(0,0,0,0.55);
-    transition: transform 0.5s cubic-bezier(.22,.8,.25,1), box-shadow 0.4s ease, filter 0.4s ease;
+    overflow: hidden;
+    transform: scale(1) translateY(0);
+    transition: transform 0.4s cubic-bezier(.22,.8,.25,1), box-shadow 0.4s ease, border-color 0.4s ease, z-index 0s;
+    z-index: 1;
   }
 
-  .stack-card.no-transition { transition: none !important; }
-
-  .stack-img {
+  .carousel-img {
     position: absolute;
     inset: 0;
     width: 100%;
     height: 100%;
     object-fit: cover;
-    display: block;
-    filter: grayscale(30%) brightness(0.68);
+    filter: grayscale(35%) brightness(0.62);
     transition: filter 0.45s ease, transform 0.6s ease;
+    pointer-events: none;
+    -webkit-user-drag: none;
   }
 
-  .stack-info {
+  .carousel-info {
     position: absolute;
     inset: 0;
     display: flex;
     flex-direction: column;
     justify-content: flex-end;
-    padding: 1.5rem;
-    background: linear-gradient(to top, rgba(5,4,4,0.96) 8%, rgba(5,4,4,0.25) 58%, transparent 100%);
+    padding: 1rem;
+    background: linear-gradient(to top, rgba(5,4,4,0.97) 12%, rgba(5,4,4,0.35) 60%, transparent 100%);
     opacity: 0;
     transition: opacity 0.4s ease;
+    pointer-events: none;
   }
 
-  .stack-number {
+  .carousel-name {
     font-family: 'Cinzel', serif;
-    font-size: 0.7rem;
-    letter-spacing: 0.15em;
-    color: var(--red-bright);
-    opacity: 0.85;
-    margin-bottom: 0.6rem;
-  }
-
-  .stack-name {
-    font-family: 'Cinzel', serif;
-    font-size: 1.15rem;
+    font-size: 0.98rem;
     font-weight: 700;
     color: var(--text);
-    letter-spacing: 0.05em;
-    margin-bottom: 0.5rem;
+    letter-spacing: 0.04em;
+    margin-bottom: 0.4rem;
   }
 
-  .stack-lore {
-    font-size: 0.85rem;
+  .carousel-lore {
+    font-size: 0.76rem;
     color: var(--text-muted);
-    line-height: 1.6;
+    line-height: 1.55;
   }
 
-  /* Stack depth positions, applied/reordered by JS */
-  .stack-card.pos-0 { transform: translate(0,0) rotate(0deg) scale(1); z-index: 4; pointer-events: auto; }
-  .stack-card.pos-1 { transform: translate(12px,12px) rotate(3deg) scale(0.96); z-index: 3; pointer-events: none; filter: brightness(0.75); }
-  .stack-card.pos-2 { transform: translate(22px,22px) rotate(-3.5deg) scale(0.92); z-index: 2; pointer-events: none; filter: brightness(0.6); }
-  .stack-card.pos-3 { transform: translate(30px,32px) rotate(5deg) scale(0.88); z-index: 1; pointer-events: none; filter: brightness(0.48); opacity: 0.9; }
-
-  .stack-card.pos-0:hover,
-  .stack-card.pos-0.touch-revealed {
-    transform: translate(0,-16px) scale(1.06);
-    box-shadow: 0 26px 55px rgba(192,17,10,0.3);
+  /* popped state — desktop hover / mobile tap */
+  .carousel-card.popped {
+    transform: scale(1.28) translateY(-14px);
+    z-index: 20;
+    border-color: var(--red);
+    box-shadow: 0 28px 60px rgba(0,0,0,0.65), 0 0 0 1px rgba(192,17,10,0.25);
   }
-  .stack-card.pos-0:hover .stack-img,
-  .stack-card.pos-0.touch-revealed .stack-img {
-    filter: grayscale(0%) brightness(0.88);
-    transform: scale(1.05);
+  .carousel-card.popped .carousel-img {
+    filter: grayscale(0%) brightness(0.92);
+    transform: scale(1.04);
   }
-  .stack-card.pos-0:hover .stack-info,
-  .stack-card.pos-0.touch-revealed .stack-info {
+  .carousel-card.popped .carousel-info {
     opacity: 1;
   }
 
-  .stack-card.exiting {
-    transform: translate(-70px,-90px) rotate(-14deg) scale(0.9) !important;
-    opacity: 0;
-  }
-
-  .stack-hint {
-    text-align: center;
-    color: var(--text-muted);
-    font-size: 0.75rem;
-    letter-spacing: 0.1em;
-    margin-top: 1.75rem;
-    opacity: 0.65;
-  }
-
   @media (max-width: 720px) {
-    .card-stack { width: min(300px, 86vw); height: 400px; margin-top: 1rem; }
-    .stack-name { font-size: 1rem; }
-    .stack-lore { font-size: 0.8rem; }
+    .carousel-card { width: 198px; height: 260px; }
+    .carousel-card.popped { transform: scale(1.35) translateY(-10px); }
+    .carousel-name { font-size: 0.88rem; }
+    .carousel-lore { font-size: 0.72rem; }
+    .carousel-viewport { touch-action: pan-y; margin-top: 1rem; }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .carousel-card, .carousel-img, .carousel-info { transition: none; }
   }
 
   /* ART CONTEST */
@@ -1313,283 +1319,6 @@
     .prize-card[data-rank="bronze"] { order: 3; }
     .contest-rules { margin-top: 2rem; }
     .contest-footer { flex-direction: column; }
-  }
-
-  /* ══════════════════════════════════════════════════════════
-     ART CONTEST SUBMISSIONS — infinite auto-scroll carousel
-     ══════════════════════════════════════════════════════════ */
-  #submissions {
-    background: var(--black);
-    overflow: hidden;
-  }
-
-  .submissions-head {
-    text-align: center;
-    margin-bottom: 3rem;
-  }
-
-  .carousel-viewport {
-    width: 100%;
-    overflow: hidden;
-    -webkit-mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
-    mask-image: linear-gradient(90deg, transparent 0%, #000 6%, #000 94%, transparent 100%);
-  }
-
-  .carousel-track {
-    display: flex;
-    gap: 1.25rem;
-    width: max-content;
-    animation: carousel-scroll var(--carousel-duration, 40s) linear infinite;
-  }
-
-  .carousel-track.paused {
-    animation-play-state: paused;
-  }
-
-  @keyframes carousel-scroll {
-    from { transform: translateX(0); }
-    to { transform: translateX(-50%); }
-  }
-
-  .submission-card {
-    position: relative;
-    flex: 0 0 auto;
-    width: 220px;
-    background: var(--surface2);
-    border: 1px solid var(--border);
-    overflow: hidden;
-    cursor: pointer;
-    transition: border-color 0.25s ease, transform 0.25s ease, box-shadow 0.25s ease, z-index 0s;
-  }
-
-  .submission-card:focus-visible {
-    outline: 2px solid var(--red-bright);
-    outline-offset: 2px;
-  }
-
-  .submission-img-wrap {
-    position: relative;
-    width: 100%;
-    aspect-ratio: 1 / 1;
-    overflow: hidden;
-  }
-
-  .submission-img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
-    display: block;
-    filter: saturate(0.92) brightness(0.92);
-    transition: filter 0.3s ease, transform 0.4s ease;
-  }
-
-  .submission-link {
-    position: absolute;
-    top: 8px;
-    right: 8px;
-    width: 28px;
-    height: 28px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(5,4,4,0.72);
-    border: 1px solid var(--border);
-    color: var(--red-bright);
-    text-decoration: none;
-    transition: opacity 0.2s ease, transform 0.2s ease, border-color 0.2s ease, background 0.2s ease;
-  }
-
-  .submission-link:hover,
-  .submission-link:focus-visible {
-    border-color: var(--red);
-    background: rgba(192,17,10,0.35);
-  }
-
-  .submission-link svg {
-    width: 13px;
-    height: 13px;
-    fill: currentColor;
-  }
-
-  .submission-info {
-    padding: 0.7rem 0.85rem 0.85rem;
-  }
-
-  .submission-artist {
-    font-size: 0.78rem;
-    color: var(--text-muted);
-    letter-spacing: 0.02em;
-  }
-
-  .submission-artist span {
-    color: var(--red-bright);
-  }
-
-  /* Desktop / hover-capable: card grows into a bigger in-place preview on hover */
-  @media (hover: hover) and (pointer: fine) {
-    .submission-link {
-      opacity: 0;
-      transform: translateY(-4px);
-    }
-
-    .submission-card:hover,
-    .submission-card:focus-within {
-      border-color: var(--red);
-      transform: translateY(-10px) scale(1.35);
-      z-index: 5;
-      box-shadow: 0 22px 48px rgba(0,0,0,0.6), 0 0 0 1px rgba(192,17,10,0.25);
-    }
-
-    .submission-card:hover .submission-img,
-    .submission-card:focus-within .submission-img {
-      filter: saturate(1) brightness(1);
-      transform: scale(1.04);
-    }
-
-    .submission-card:hover .submission-link,
-    .submission-card:focus-within .submission-link {
-      opacity: 1;
-      transform: translateY(0);
-    }
-  }
-
-  /* Touch: no hover, so the X-post icon stays visible so it's reachable by tap */
-  @media (hover: none) {
-    .submission-link {
-      opacity: 1;
-    }
-  }
-
-  @media (max-width: 720px) {
-    .submission-card { width: 160px; }
-    .carousel-track { gap: 0.85rem; }
-  }
-
-  @media (prefers-reduced-motion: reduce) {
-    .carousel-track { animation: none; }
-    .submission-card:hover,
-    .submission-card:focus-within { transform: none; }
-  }
-
-  /* SUBMISSION LIGHTBOX */
-  #submission-lightbox {
-    position: fixed;
-    inset: 0;
-    z-index: 500;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    padding: 2rem 1.25rem;
-    background: rgba(3,2,2,0.92);
-    backdrop-filter: blur(6px);
-    opacity: 0;
-    visibility: hidden;
-    transition: opacity 0.25s ease;
-  }
-
-  #submission-lightbox.open {
-    opacity: 1;
-    visibility: visible;
-  }
-
-  body.lightbox-open { overflow: hidden; }
-
-  .lightbox-inner {
-    position: relative;
-    max-width: min(640px, 90vw);
-    max-height: 88vh;
-    display: flex;
-    flex-direction: column;
-    align-items: center;
-    transform: scale(0.96);
-    transition: transform 0.25s ease;
-  }
-
-  #submission-lightbox.open .lightbox-inner {
-    transform: scale(1);
-  }
-
-  .lightbox-img {
-    display: block;
-    max-width: 100%;
-    max-height: 72vh;
-    width: auto;
-    height: auto;
-    border: 1px solid var(--border);
-    background: var(--surface2);
-  }
-
-  .lightbox-meta {
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 1.25rem;
-    margin-top: 1.1rem;
-  }
-
-  .lightbox-artist {
-    font-size: 0.9rem;
-    color: var(--text);
-  }
-
-  .lightbox-artist span {
-    color: var(--red-bright);
-  }
-
-  .lightbox-x-link {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.4rem;
-    color: var(--text-muted);
-    text-decoration: none;
-    font-size: 0.78rem;
-    letter-spacing: 0.08em;
-    border: 1px solid var(--border);
-    padding: 0.4rem 0.8rem;
-    transition: color 0.2s ease, border-color 0.2s ease;
-  }
-
-  .lightbox-x-link:hover {
-    color: var(--red-bright);
-    border-color: var(--red);
-  }
-
-  .lightbox-x-link svg {
-    width: 13px;
-    height: 13px;
-    fill: currentColor;
-  }
-
-  .lightbox-close {
-    position: absolute;
-    top: -44px;
-    right: -6px;
-    width: 36px;
-    height: 36px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    background: rgba(5,4,4,0.72);
-    border: 1px solid var(--border);
-    color: var(--text);
-    cursor: pointer;
-    transition: border-color 0.2s ease, color 0.2s ease;
-  }
-
-  .lightbox-close:hover {
-    border-color: var(--red);
-    color: var(--red-bright);
-  }
-
-  .lightbox-close svg {
-    width: 16px;
-    height: 16px;
-    fill: currentColor;
-  }
-
-  @media (max-width: 720px) {
-    .lightbox-close { top: -50px; right: 0; }
-    .lightbox-meta { flex-direction: column; gap: 0.75rem; }
   }
 
   /* ══════════════════════════════════════════════════════════
@@ -1885,7 +1614,7 @@
     <img src="primals-logo.jpg" alt="PRIMALS" class="hero-logo" />
     <p class="hero-eyebrow">A new NFT collection. Coming soon.</p>
     <h1 class="hero-headline">Not fully apes.<br>Not fully human.<br><span>Something else entirely.</span></h1>
-    <p class="hero-sub">An ancient species awakens. Evolution is not a destination — it is a reckoning.</p>
+    <p class="hero-sub">An ancient species awakens. Evolution is not a destination, it is a reckoning.</p>
     <div class="hero-actions">
       <a href="https://discord.gg/ZRrWFfRVez" target="_blank" class="btn-solid">Join Discord</a>
       <a href="https://x.com/primalsnftx" target="_blank" class="btn-outline">Follow on X</a>
@@ -1949,443 +1678,9 @@
     </div>
 
     <div class="contest-footer fade-in">
-      <span class="contest-deadline">Deadline · Aug 5, 5PM UTC</span>
+      <span class="contest-deadline">Deadline · Aug 15, 5PM UTC</span>
     </div>
   </div>
-</section>
-
-<div class="divider"></div>
-
-<!-- ART CONTEST SUBMISSIONS -->
-<section id="submissions">
-  <div class="submissions-head fade-in">
-    <p class="section-eyebrow">Community entries</p>
-    <h2 class="section-title">Submitted Primals</h2>
-    <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto; font-size: 0.92rem;">A rolling look at the art pouring in for the contest. Hover to pause, click a piece to view the original post.</p>
-  </div>
-
-  <div class="carousel-viewport fade-in">
-    <div class="carousel-track" id="submissions-track">
-      <!-- Original set -->
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @SergikariART" data-artist="SergikariART" data-link="https://x.com/SergikariART/status/2081762125488287898?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-01.jpg" alt="Submission by @SergikariART" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/SergikariART/status/2081762125488287898?s=20" target="_blank" rel="noopener" aria-label="View @SergikariART's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@SergikariART</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Manifest_Artt" data-artist="Manifest_Artt" data-link="https://x.com/Manifest_Artt/status/2082234978222453053?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-02.jpg" alt="Submission by @Manifest_Artt" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Manifest_Artt/status/2082234978222453053?s=20" target="_blank" rel="noopener" aria-label="View @Manifest_Artt's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Manifest_Artt</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @XiHumNft" data-artist="XiHumNft" data-link="https://x.com/XiHumNft/status/2080155678161944629?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-03.jpg" alt="Submission by @XiHumNft" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/XiHumNft/status/2080155678161944629?s=20" target="_blank" rel="noopener" aria-label="View @XiHumNft's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@XiHumNft</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Rinaqtt343537" data-artist="Rinaqtt343537" data-link="https://x.com/Rinaqtt343537/status/2081776723075731714?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-04.jpg" alt="Submission by @Rinaqtt343537" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Rinaqtt343537/status/2081776723075731714?s=20" target="_blank" rel="noopener" aria-label="View @Rinaqtt343537's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Rinaqtt343537</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Shingapuo" data-artist="Shingapuo" data-link="https://x.com/Shingapuo/status/2081889756170858858?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-05.jpg" alt="Submission by @Shingapuo" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Shingapuo/status/2081889756170858858?s=20" target="_blank" rel="noopener" aria-label="View @Shingapuo's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Shingapuo</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Masbrenk16" data-artist="Masbrenk16" data-link="https://x.com/Masbrenk16/status/2081708051024040227?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-06.jpg" alt="Submission by @Masbrenk16" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Masbrenk16/status/2081708051024040227?s=20" target="_blank" rel="noopener" aria-label="View @Masbrenk16's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Masbrenk16</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @0xCinimini" data-artist="0xCinimini" data-link="https://x.com/0xCinimini/status/2080566001410703623?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-07.jpg" alt="Submission by @0xCinimini" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/0xCinimini/status/2080566001410703623?s=20" target="_blank" rel="noopener" aria-label="View @0xCinimini's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@0xCinimini</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @onku_muse" data-artist="onku_muse" data-link="https://x.com/onku_muse/status/2081038273674146268?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-08.jpg" alt="Submission by @onku_muse" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/onku_muse/status/2081038273674146268?s=20" target="_blank" rel="noopener" aria-label="View @onku_muse's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@onku_muse</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Mahudu_Manas" data-artist="Mahudu_Manas" data-link="https://x.com/Mahudu_Manas/status/2080752246602531274?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-09.jpg" alt="Submission by @Mahudu_Manas" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Mahudu_Manas/status/2080752246602531274?s=20" target="_blank" rel="noopener" aria-label="View @Mahudu_Manas's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Mahudu_Manas</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @eneh_ephraim" data-artist="eneh_ephraim" data-link="https://x.com/eneh_ephraim/status/2080995499939614975?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-10.jpg" alt="Submission by @eneh_ephraim" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/eneh_ephraim/status/2080995499939614975?s=20" target="_blank" rel="noopener" aria-label="View @eneh_ephraim's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@eneh_ephraim</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @ThePoOHlarBear" data-artist="ThePoOHlarBear" data-link="https://x.com/ThePoOHlarBear/status/2081896650952290664?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-11.jpg" alt="Submission by @ThePoOHlarBear" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/ThePoOHlarBear/status/2081896650952290664?s=20" target="_blank" rel="noopener" aria-label="View @ThePoOHlarBear's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@ThePoOHlarBear</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Pauline_Fathima" data-artist="Pauline_Fathima" data-link="https://x.com/Pauline_Fathima/status/2080407443192861166?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-12.jpg" alt="Submission by @Pauline_Fathima" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Pauline_Fathima/status/2080407443192861166?s=20" target="_blank" rel="noopener" aria-label="View @Pauline_Fathima's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Pauline_Fathima</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @AimanGrey" data-artist="AimanGrey" data-link="https://x.com/AimanGrey/status/2082090218942005498?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-13.jpg" alt="Submission by @AimanGrey" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/AimanGrey/status/2082090218942005498?s=20" target="_blank" rel="noopener" aria-label="View @AimanGrey's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@AimanGrey</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Pauline_Fathima" data-artist="Pauline_Fathima" data-link="https://x.com/Pauline_Fathima/status/2081025752317784153?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-14.jpg" alt="Submission by @Pauline_Fathima" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Pauline_Fathima/status/2081025752317784153?s=20" target="_blank" rel="noopener" aria-label="View @Pauline_Fathima's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Pauline_Fathima</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @kankaunglay" data-artist="kankaunglay" data-link="https://x.com/kankaunglay/status/2081308436839764217?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-15.jpg" alt="Submission by @kankaunglay" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/kankaunglay/status/2081308436839764217?s=20" target="_blank" rel="noopener" aria-label="View @kankaunglay's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@kankaunglay</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Manifest_Artt" data-artist="Manifest_Artt" data-link="https://x.com/Manifest_Artt/status/2081499318339379461?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-16.jpg" alt="Submission by @Manifest_Artt" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Manifest_Artt/status/2081499318339379461?s=20" target="_blank" rel="noopener" aria-label="View @Manifest_Artt's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Manifest_Artt</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @Waltex1op" data-artist="Waltex1op" data-link="https://x.com/Waltex1op/status/2082124230716735545?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-17.jpg" alt="Submission by @Waltex1op" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Waltex1op/status/2082124230716735545?s=20" target="_blank" rel="noopener" aria-label="View @Waltex1op's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Waltex1op</span></p>
-        </div>
-      </div>
-      <div class="submission-card" tabindex="0" role="button" aria-label="View larger image, submission by @079Studio" data-artist="079Studio" data-link="https://x.com/079Studio/status/2080704644804939960?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-18.jpg" alt="Submission by @079Studio" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/079Studio/status/2080704644804939960?s=20" target="_blank" rel="noopener" aria-label="View @079Studio's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@079Studio</span></p>
-        </div>
-      </div>
-
-      <!-- Duplicate set — keep identical to the original set above for a seamless loop -->
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="SergikariART" data-link="https://x.com/SergikariART/status/2081762125488287898?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-01.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/SergikariART/status/2081762125488287898?s=20" target="_blank" rel="noopener" aria-label="View @SergikariART's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@SergikariART</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Manifest_Artt" data-link="https://x.com/Manifest_Artt/status/2082234978222453053?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-02.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Manifest_Artt/status/2082234978222453053?s=20" target="_blank" rel="noopener" aria-label="View @Manifest_Artt's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Manifest_Artt</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="XiHumNft" data-link="https://x.com/XiHumNft/status/2080155678161944629?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-03.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/XiHumNft/status/2080155678161944629?s=20" target="_blank" rel="noopener" aria-label="View @XiHumNft's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@XiHumNft</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Rinaqtt343537" data-link="https://x.com/Rinaqtt343537/status/2081776723075731714?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-04.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Rinaqtt343537/status/2081776723075731714?s=20" target="_blank" rel="noopener" aria-label="View @Rinaqtt343537's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Rinaqtt343537</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Shingapuo" data-link="https://x.com/Shingapuo/status/2081889756170858858?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-05.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Shingapuo/status/2081889756170858858?s=20" target="_blank" rel="noopener" aria-label="View @Shingapuo's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Shingapuo</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Masbrenk16" data-link="https://x.com/Masbrenk16/status/2081708051024040227?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-06.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Masbrenk16/status/2081708051024040227?s=20" target="_blank" rel="noopener" aria-label="View @Masbrenk16's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Masbrenk16</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="0xCinimini" data-link="https://x.com/0xCinimini/status/2080566001410703623?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-07.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/0xCinimini/status/2080566001410703623?s=20" target="_blank" rel="noopener" aria-label="View @0xCinimini's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@0xCinimini</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="onku_muse" data-link="https://x.com/onku_muse/status/2081038273674146268?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-08.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/onku_muse/status/2081038273674146268?s=20" target="_blank" rel="noopener" aria-label="View @onku_muse's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@onku_muse</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Mahudu_Manas" data-link="https://x.com/Mahudu_Manas/status/2080752246602531274?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-09.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Mahudu_Manas/status/2080752246602531274?s=20" target="_blank" rel="noopener" aria-label="View @Mahudu_Manas's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Mahudu_Manas</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="eneh_ephraim" data-link="https://x.com/eneh_ephraim/status/2080995499939614975?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-10.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/eneh_ephraim/status/2080995499939614975?s=20" target="_blank" rel="noopener" aria-label="View @eneh_ephraim's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@eneh_ephraim</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="ThePoOHlarBear" data-link="https://x.com/ThePoOHlarBear/status/2081896650952290664?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-11.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/ThePoOHlarBear/status/2081896650952290664?s=20" target="_blank" rel="noopener" aria-label="View @ThePoOHlarBear's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@ThePoOHlarBear</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Pauline_Fathima" data-link="https://x.com/Pauline_Fathima/status/2080407443192861166?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-12.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Pauline_Fathima/status/2080407443192861166?s=20" target="_blank" rel="noopener" aria-label="View @Pauline_Fathima's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Pauline_Fathima</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="AimanGrey" data-link="https://x.com/AimanGrey/status/2082090218942005498?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-13.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/AimanGrey/status/2082090218942005498?s=20" target="_blank" rel="noopener" aria-label="View @AimanGrey's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@AimanGrey</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Pauline_Fathima" data-link="https://x.com/Pauline_Fathima/status/2081025752317784153?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-14.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Pauline_Fathima/status/2081025752317784153?s=20" target="_blank" rel="noopener" aria-label="View @Pauline_Fathima's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Pauline_Fathima</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="kankaunglay" data-link="https://x.com/kankaunglay/status/2081308436839764217?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-15.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/kankaunglay/status/2081308436839764217?s=20" target="_blank" rel="noopener" aria-label="View @kankaunglay's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@kankaunglay</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Manifest_Artt" data-link="https://x.com/Manifest_Artt/status/2081499318339379461?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-16.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Manifest_Artt/status/2081499318339379461?s=20" target="_blank" rel="noopener" aria-label="View @Manifest_Artt's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Manifest_Artt</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="Waltex1op" data-link="https://x.com/Waltex1op/status/2082124230716735545?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-17.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/Waltex1op/status/2082124230716735545?s=20" target="_blank" rel="noopener" aria-label="View @Waltex1op's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@Waltex1op</span></p>
-        </div>
-      </div>
-      <div class="submission-card" aria-hidden="true" tabindex="-1" data-artist="079Studio" data-link="https://x.com/079Studio/status/2080704644804939960?s=20">
-        <div class="submission-img-wrap">
-          <img src="submissions/entry-18.jpg" alt="" class="submission-img" loading="lazy" />
-          <a class="submission-link" href="https://x.com/079Studio/status/2080704644804939960?s=20" target="_blank" rel="noopener" aria-label="View @079Studio's post on X">
-            <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          </a>
-        </div>
-        <div class="submission-info">
-          <p class="submission-artist">by <span>@079Studio</span></p>
-        </div>
-      </div>
-    </div>
-  </div>
-
-
-  <!-- Lightbox: shared modal for viewing a submission larger (mobile tap, or optional desktop click) -->
-  <div id="submission-lightbox" aria-hidden="true">
-    <div class="lightbox-inner">
-      <button type="button" class="lightbox-close" id="lightbox-close" aria-label="Close">
-        <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.3 5.71L12 12l6.3 6.29-1.41 1.42L10.59 13.4 4.3 19.71 2.88 18.29 9.17 12 2.88 5.71 4.3 4.29l6.29 6.3 6.3-6.3z"/></svg>
-      </button>
-      <img id="lightbox-img" class="lightbox-img" src="" alt="" />
-      <div class="lightbox-meta">
-        <p class="lightbox-artist">by <span id="lightbox-artist-handle"></span></p>
-        <a id="lightbox-link" class="lightbox-x-link" href="#" target="_blank" rel="noopener">
-          <svg viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg"><path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-4.714-6.231-5.401 6.231H2.748l7.73-8.835L1.254 2.25H8.08l4.261 5.635L18.244 2.25zm-1.161 17.52h1.833L7.084 4.126H5.117L17.083 19.77z"/></svg>
-          View on X
-        </a>
-      </div>
-    </div>
-  </div>
-
 </section>
 
 <div class="divider"></div>
@@ -2397,7 +1692,7 @@
       <div class="lore-text">
         <p class="section-eyebrow">The origin</p>
         <h2 class="section-title">Before kingdoms.<br>Before civilization.</h2>
-        <p>Before kingdoms. Before technology. Before civilization — there was only instinct. The Primals are descendants of an ancient species caught between two worlds, neither apes nor human.</p>
+        <p>Before kingdoms. Before technology. Before civilization, there was only instinct. The Primals are descendants of an ancient species caught between two worlds, neither apes nor human.</p>
         <p>They began to evolve. Some embraced intelligence. Others clung to strength. Some sought knowledge hidden beyond the known world. Others believed the old ways should never be forgotten.</p>
         <p>As generations passed, the Primals spread across a wild and untamed realm. Their bodies changed. Their beliefs changed. Their purpose changed. Yet one truth remained: <em>They were unfinished.</em></p>
       </div>
@@ -2419,9 +1714,9 @@
       <div class="claw-text">
         <p class="section-eyebrow">The awakening</p>
         <h2 class="section-title">Something dormant<br>has begun to stir.</h2>
-        <p>Every Primal carries traces of what they were and hints of what they may become. Their appearance reflects this struggle — part ape, part human, shaped by adaptation and their environment.</p>
+        <p>Every Primal carries traces of what they were and hints of what they may become. Their appearance reflects this struggle, part ape, part human, shaped by adaptation and their environment.</p>
         <p>No one knows what caused the Awakening. Some believe it came from the stars. Others claim it emerged from deep beneath the earth. Many think the truth has been lost forever.</p>
-        <p>Now a new era approaches. Ancient symbols are resurfacing. Forgotten relics are being discovered. Strange markings have begun appearing across the world — as if something dormant has started to awaken once again.</p>
+        <p>Now a new era approaches. Ancient symbols are resurfacing. Forgotten relics are being discovered. Strange markings have begun appearing across the world, as if something dormant has started to awaken once again.</p>
       </div>
     </div>
   </div>
@@ -2435,83 +1730,12 @@
     <div class="fade-in" style="text-align: center; margin-bottom: 1rem;">
       <p class="section-eyebrow">Sneak peek</p>
       <h2 class="section-title">The Awakened Primals</h2>
-      <p style="color: var(--text-muted); max-width: 520px; margin: 0 auto; font-size: 0.92rem;">A handful of Primals have surfaced early. Hover to inspect. Click to reveal the next.</p>
     </div>
+  </div>
 
-    <div class="stack-wrap fade-in">
-      <div class="card-stack" id="card-stack">
-        <div class="stack-card pos-0" tabindex="0" data-order="0">
-          <img src="DragonWarlord.jpg" alt="Dragon Warlord" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Dragon Warlord</p>
-            <p class="stack-lore">Bound by oath to an ancient dragon, he channels its fury through every strike. When his beam ignites, even the legends retreat.</p>
-          </div>
-        </div>
-        <div class="stack-card pos-1" tabindex="0" data-order="1">
-          <img src="TigerClaus.jpg" alt="Tiger Claus" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Tiger Claus</p>
-            <p class="stack-lore">The ruthless apex enforcer of the Primal wilds, gifts fear and loyalty across his legion.</p>
-          </div>
-        </div>
-        <div class="stack-card pos-2" tabindex="0" data-order="2">
-          <img src="KingPrimal.jpg" alt="King Primal" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">King Primal</p>
-            <p class="stack-lore">Crowned in the ruins of past empires, King Primal fought for his throne, promising treasure to the loyal and total annihilation to all else.</p>
-          </div>
-        </div>
-        <div class="stack-card pos-3" tabindex="0" data-order="3">
-          <img src="PrimalEmperor.jpg" alt="Primal Emperor" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Primal Emperor</p>
-            <p class="stack-lore">Donned in his legendary fur bounty, the Primal Emperor symbolizes mastery of nature, abundance, and instinctive dominance.</p>
-          </div>
-        </div>
-        <div class="stack-card" tabindex="0" data-order="4">
-          <img src="AstralPrimal.jpg" alt="Astral Primal" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Astral Primal</p>
-            <p class="stack-lore">A star touched evolution of the unfinished lineage, forever suspended between primal instinct and transcendent knowledge.</p>
-          </div>
-        </div>
-        <div class="stack-card" tabindex="0" data-order="5">
-          <img src="CaptainCloud.jpg" alt="Captain Cloud" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Captain Cloud</p>
-            <p class="stack-lore">Before the maps were drawn and the stars were named, Captain Cloud sailed the unseen currents between worlds seeking the Awakening.</p>
-          </div>
-        </div>
-        <div class="stack-card" tabindex="0" data-order="6">
-          <img src="InfernalWarlord.jpg" alt="Infernal Warlord" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Infernal Warlord</p>
-            <p class="stack-lore">Born of the old blood, the Infernal Warlord rejected the slow crawl of evolution and forged himself in primordial blaze.</p>
-          </div>
-        </div>
-        <div class="stack-card" tabindex="0" data-order="7">
-          <img src="PrimalSamurai.jpg" alt="Primal Samurai" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Primal Samurai</p>
-            <p class="stack-lore">Forged by forgotten relics and guided by the Awakening, he stands between instinct and evolution, guarding the path to what comes next.</p>
-          </div>
-        </div>
-        <div class="stack-card" tabindex="0" data-order="8">
-          <img src="SerpentGuardian.jpg" alt="Serpent Guardian" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Serpent Guardian</p>
-            <p class="stack-lore">Once the sacred guardian of the primal groves, it rewrote its flesh. Now it walks the graveyard of its own kind, waiting for the final call of the Primals.</p>
-          </div>
-        </div>
-        <div class="stack-card" tabindex="0" data-order="9">
-          <img src="NakedPrimal.jpg" alt="Naked Primal" class="stack-img" />
-          <div class="stack-info">
-            <p class="stack-name">Naked Primal</p>
-            <p class="stack-lore">Once unchallenged, this naked Primal is eager to take it back after losing everything during the fall of his legion.</p>
-          </div>
-        </div>
-      </div>
-      <p class="stack-hint">Hover to inspect · Click to reveal the next</p>
+  <div class="carousel-viewport fade-in" id="carousel-viewport">
+    <div class="carousel-track" id="carousel-track">
+      <!-- cards injected by JS, then duplicated for the infinite loop -->
     </div>
   </div>
 </section>
@@ -2560,7 +1784,7 @@
           <path d="M22 22 Q28 14 34 22 Q42 28 34 34 Q28 42 22 34 Q14 28 22 22Z" stroke="#C0110A" stroke-width="1" fill="#7A0804" fill-opacity="0.4"/>
         </svg>
         <p class="trait-name">Community First</p>
-        <p class="trait-desc">The Primals are being built with the community at the center — from day one.</p>
+        <p class="trait-desc">The Primals are being built with the community at the center, from day one.</p>
       </div>
     </div>
   </div>
@@ -2683,141 +1907,147 @@ const observer = new IntersectionObserver((entries) => {
 
 document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
 
-// Sneak peek — stacked card gallery
+// Sneak peek — infinite auto-scrolling carousel
 (function() {
-  const stack = document.getElementById('card-stack');
-  if (!stack) return;
+  const PRIMALS = [
+    { name: "Dragon Warlord", img: "DragonWarlord.jpg", lore: "Bound by oath to an ancient dragon, he channels its fury through every strike. When his beam ignites, even the legends retreat." },
+    { name: "Tiger Claus", img: "TigerClaus.jpg", lore: "The ruthless apex enforcer of the Primal wilds, gifts fear and loyalty across his legion." },
+    { name: "King Primal", img: "KingPrimal.jpg", lore: "Crowned in the ruins of past empires, King Primal fought for his throne, promising treasure to the loyal and total annihilation to all else." },
+    { name: "Primal Emperor", img: "PrimalEmperor.jpg", lore: "Donned in his legendary fur bounty, the Primal Emperor symbolizes mastery of nature, abundance, and instinctive dominance." },
+    { name: "Astral Primal", img: "AstralPrimal.jpg", lore: "A star touched evolution of the unfinished lineage, forever suspended between primal instinct and transcendent knowledge." },
+    { name: "Captain Cloud", img: "CaptainCloud.jpg", lore: "Before the maps were drawn and the stars were named, Captain Cloud sailed the unseen currents between worlds seeking the Awakening." },
+    { name: "Infernal Warlord", img: "InfernalWarlord.jpg", lore: "Born of the old blood, the Infernal Warlord rejected the slow crawl of evolution and forged himself in primordial blaze." },
+    { name: "OG Primal", img: "OGPrimal.jpg", lore: "The last white furred oracle, the eyes of OG Primal are forever locked on the next big score, smoking the signal that wakes the ancient code." },
+    { name: "Galactic Primal", img: "GalacticPrimal.jpg", lore: "The Galactic Primal, wearing the cosmos in his fur and the future in his lenses, forever racing the next Awakening." },
+    { name: "Apex Primal", img: "ApexPrimal.jpg", lore: "The Apex Primal who outran the unfinished bloodline, channeling the Awakening's spark. Evolution's first true upgrade." },
+    { name: "Primal Samurai", img: "PrimalSamurai.jpg", lore: "Forged by forgotten relics and guided by the Awakening, he stands between instinct and evolution, guarding the path to what comes next." },
+    { name: "Serpent Guardian", img: "SerpentGuardian.jpg", lore: "Once the sacred guardian of the primal groves, it rewrote its flesh. Now it walks the graveyard of its own kind, waiting for the final call." },
+    { name: "Naked Primal", img: "NakedPrimal.jpg", lore: "Once unchallenged, this naked Primal is eager to take it back after losing everything during the fall of his legion." }
+  ];
 
-  let order = Array.from(stack.querySelectorAll('.stack-card'));
-  const isTouch = !window.matchMedia('(hover: hover) and (pointer: fine)').matches;
+  const viewport = document.getElementById('carousel-viewport');
+  const track = document.getElementById('carousel-track');
+  if (!viewport || !track) return;
 
-  function applyPositions() {
-    order.forEach((card, i) => {
-      card.classList.remove('pos-0', 'pos-1', 'pos-2', 'pos-3');
-      const depth = Math.min(i, 3);
-      card.classList.add('pos-' + depth);
+  // --- build cards (twice, back to back, for a seamless loop) ---
+  function buildCard(p) {
+    const card = document.createElement('div');
+    card.className = 'carousel-card';
+    card.tabIndex = 0;
+    card.innerHTML = `
+      <img src="${p.img}" alt="${p.name}" class="carousel-img" draggable="false" />
+      <div class="carousel-info">
+        <p class="carousel-name">${p.name}</p>
+        <p class="carousel-lore">${p.lore}</p>
+      </div>
+    `;
+    return card;
+  }
+  PRIMALS.forEach(p => track.appendChild(buildCard(p)));
+  PRIMALS.forEach(p => track.appendChild(buildCard(p))); // duplicate set
+
+  // --- state ---
+  let pos = 0;             // current scroll offset (px)
+  let halfWidth = 0;        // width of ONE full set of cards
+  let paused = false;       // true while hovered / popped / dragging
+  let dragging = false;
+  let dragMoved = false;
+  let dragStartX = 0;
+  let dragStartPos = 0;
+  let activeCard = null;
+  const SPEED = 0.55;       // px per frame
+  const DRAG_THRESHOLD = 6; // px before a touch counts as a drag, not a tap
+  const isCoarsePointer = window.matchMedia('(hover: none), (pointer: coarse)').matches;
+
+  function measure() {
+    halfWidth = track.scrollWidth / 2;
+  }
+  measure();
+  window.addEventListener('resize', measure);
+
+  function popCard(card) {
+    if (activeCard === card) return;
+    if (activeCard) activeCard.classList.remove('popped');
+    activeCard = card;
+    card.classList.add('popped');
+    paused = true;
+  }
+  function clearPop() {
+    if (activeCard) activeCard.classList.remove('popped');
+    activeCard = null;
+    paused = false;
+  }
+
+  // --- animation loop: single source of truth for position ---
+  function frame() {
+    if (!paused && !dragging) {
+      pos += SPEED;
+      if (pos >= halfWidth) pos -= halfWidth;
+    }
+    track.style.transform = `translateX(${-pos}px)`;
+    requestAnimationFrame(frame);
+  }
+  requestAnimationFrame(frame);
+
+  // --- desktop: hover pauses + pops ---
+  if (!isCoarsePointer) {
+    track.querySelectorAll('.carousel-card').forEach(card => {
+      card.addEventListener('mouseenter', () => popCard(card));
     });
+    viewport.addEventListener('mouseleave', () => clearPop());
   }
 
-  function advance(topCard) {
-    topCard.classList.add('exiting');
-    setTimeout(() => {
-      order.push(order.shift());
-      topCard.classList.remove('touch-revealed');
-      topCard.classList.add('no-transition');
-      applyPositions();
-      void topCard.offsetWidth; // force reflow so the snap-back is instant
-      topCard.classList.remove('no-transition');
-      topCard.classList.remove('exiting');
-    }, 480);
-  }
+  // --- touch: tap to pop, drag to swipe, tap-out to resume ---
+  viewport.addEventListener('pointerdown', (e) => {
+    if (e.pointerType !== 'touch' && e.pointerType !== 'pen') return;
+    dragging = true;
+    dragMoved = false;
+    dragStartX = e.clientX;
+    dragStartPos = pos;
+    paused = true;
+    viewport.classList.add('grabbing');
+    try { viewport.setPointerCapture(e.pointerId); } catch (err) {}
+  });
 
-  function handleActivate(e) {
-    const card = e.currentTarget;
-    if (!card.classList.contains('pos-0')) return;
+  viewport.addEventListener('pointermove', (e) => {
+    if (!dragging) return;
+    const dx = e.clientX - dragStartX;
+    if (Math.abs(dx) > DRAG_THRESHOLD) dragMoved = true;
+    if (dragMoved) {
+      let next = dragStartPos - dx;
+      next = ((next % halfWidth) + halfWidth) % halfWidth;
+      pos = next;
+    }
+  });
 
-    if (isTouch && !card.classList.contains('touch-revealed')) {
-      // First tap on touch devices reveals the lore instead of cycling immediately
-      e.preventDefault();
-      card.classList.add('touch-revealed');
+  function endDrag(e) {
+    if (!dragging) return;
+    dragging = false;
+    viewport.classList.remove('grabbing');
+
+    if (dragMoved) {
+      // was a swipe — resume auto-scroll
+      clearPop();
       return;
     }
-    advance(card);
+    // was a tap
+    const target = e.target.closest ? e.target.closest('.carousel-card') : null;
+    if (target) {
+      if (activeCard === target) clearPop();
+      else popCard(target);
+    } else {
+      clearPop();
+    }
   }
+  viewport.addEventListener('pointerup', endDrag);
+  viewport.addEventListener('pointercancel', endDrag);
 
-  order.forEach(card => {
-    card.addEventListener('click', handleActivate);
-    card.addEventListener('keydown', (e) => {
-      if (e.key === 'Enter' || e.key === ' ') {
-        e.preventDefault();
-        handleActivate({ currentTarget: card, preventDefault: () => {} });
-      }
-    });
-  });
-
-  applyPositions();
-})();
-
-// Art contest submissions — infinite auto-scroll carousel + lightbox
-(function() {
-  const track = document.getElementById('submissions-track');
-  if (!track) return;
-  const viewport = track.parentElement;
-
-  const canHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
-
-  // Shared pause manager: several independent reasons (hover, keyboard focus,
-  // lightbox open) can each want the carousel paused at once. The track only
-  // resumes once none of them are active anymore — this is what lets it keep
-  // scrolling on desktop after the mouse leaves, AND on mobile after the
-  // lightbox is closed, without one interaction stomping on the other.
-  const pauseReasons = new Set();
-  function setPause(reason, active) {
-    if (active) pauseReasons.add(reason); else pauseReasons.delete(reason);
-    track.classList.toggle('paused', pauseReasons.size > 0);
-  }
-
-  if (canHover) {
-    viewport.addEventListener('mouseenter', () => setPause('hover', true));
-    viewport.addEventListener('mouseleave', () => setPause('hover', false));
-
-    // Pause on keyboard focus too, so keyboard users aren't fighting the motion.
-    // Gated to hover-capable devices only: on touch, tapping a card focuses it,
-    // and returning focus to that same card after closing the lightbox would
-    // re-trigger this and leave the carousel stuck paused.
-    track.addEventListener('focusin', () => setPause('focus', true));
-    track.addEventListener('focusout', () => setPause('focus', false));
-  }
-
-  // Lightbox
-  const lightbox = document.getElementById('submission-lightbox');
-  const lbImg = document.getElementById('lightbox-img');
-  const lbArtist = document.getElementById('lightbox-artist-handle');
-  const lbLink = document.getElementById('lightbox-link');
-  const lbClose = document.getElementById('lightbox-close');
-  let lastFocused = null;
-
-  function openLightbox(card) {
-    const img = card.querySelector('.submission-img');
-    lbImg.src = img.src;
-    lbImg.alt = img.alt;
-    lbArtist.textContent = '@' + card.dataset.artist;
-    lbLink.href = card.dataset.link;
-    lastFocused = document.activeElement;
-    lightbox.classList.add('open');
-    lightbox.setAttribute('aria-hidden', 'false');
-    document.body.classList.add('lightbox-open');
-    setPause('lightbox', true);
-    lbClose.focus();
-  }
-
-  function closeLightbox() {
-    lightbox.classList.remove('open');
-    lightbox.setAttribute('aria-hidden', 'true');
-    document.body.classList.remove('lightbox-open');
-    setPause('lightbox', false); // carousel resumes once this was the only reason paused
-    if (lastFocused && typeof lastFocused.focus === 'function') lastFocused.focus();
-  }
-
-  lbClose.addEventListener('click', closeLightbox);
-  lightbox.addEventListener('click', (e) => {
-    if (e.target === lightbox) closeLightbox(); // backdrop tap/click
-  });
-  document.addEventListener('keydown', (e) => {
-    if (e.key === 'Escape' && lightbox.classList.contains('open')) closeLightbox();
-  });
-
-  track.querySelectorAll('.submission-card').forEach(card => {
-    card.addEventListener('click', (e) => {
-      if (e.target.closest('.submission-link')) return; // the X icon handles its own navigation
-      openLightbox(card);
-    });
-    card.addEventListener('keydown', (e) => {
-      if ((e.key === 'Enter' || e.key === ' ') && !e.target.closest('.submission-link')) {
-        e.preventDefault();
-        openLightbox(card);
-      }
-    });
+  // tapping/clicking anywhere outside the popped card resumes scrolling
+  document.addEventListener('pointerdown', (e) => {
+    if (!activeCard) return;
+    if (!activeCard.contains(e.target) && !viewport.contains(e.target)) {
+      clearPop();
+    }
   });
 })();
 </script>
@@ -2845,8 +2075,8 @@ document.querySelectorAll('.fade-in').forEach(el => observer.observe(el));
     'Loading DNA...',
     'Forging Traits...',
     'Awakening the Primals...',
-    'Synchronizing the Jungle...',
-    'Entering the Realm...'
+    'Evolution Complete...',
+    'Entering Primals...'
   ];
   const MESSAGE_DURATION = 0.5;    // seconds each message is fully visible
   const MESSAGE_TRANSITION = 0.22; // seconds fade/slide between messages
