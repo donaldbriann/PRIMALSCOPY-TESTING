@@ -393,7 +393,7 @@
     if (lists.WL2.has(addr)) matched.push('WL2');
 
     if (matched.length === 0) {
-      showPhaseMsg('PUBLIC PHASE', "This wallet isn't on an allowlist — you'll be able to mint during the Public phase.", 'neutral');
+      showPhaseMsg('PUBLIC PHASE', "This wallet isn't on an allowlist. You'll be able to mint during the Public phase.", 'neutral');
     } else if (matched.length === 1) {
       const phase = matched[0];
       showPhaseMsg(phase + ' PHASE', "You're eligible to mint in the " + phase + " phase.", 'success');
@@ -401,7 +401,7 @@
       const nice = matched.join(', ').replace(/, ([^,]*)$/, ' & $1');
       showMultiPhaseMsg(
         matched.map(p => p + ' PHASE'),
-        "This wallet qualifies for multiple phases — you're eligible to mint in the " + nice + " phases. You can mint during any of them.",
+        "This wallet qualifies for multiple phases. You're eligible to mint in the " + nice + " phases. You can mint during any of them.",
         'success'
       );
     }
